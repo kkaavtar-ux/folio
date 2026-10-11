@@ -38,7 +38,7 @@ const sizesFor = (n: number, mobile: string) => {
             const n = row.cols ?? row.items.length;
             const w = Math.round((1376 - (n - 1) * 16) / n);
             return (
-              <ul class:list={['gal__row', `gal__row--${row.mobile ?? (row.items.length > 2 ? 'carousel' : row.items.length === 2 ? 'grid' : 'stack')}`]} role="list" style={`--n:${n}`}>
+              <ul class:list={['gal__row', `gal__row--${row.mobile ?? (row.items.length > 2 ? 'carousel' : row.items.length === 2 ? 'grid' : 'stack')}`]} role="list" style={`--n:${n}`} data-carousel={(row.mobile ?? (row.items.length > 2 ? 'carousel' : 'x')) === 'carousel' ? '' : undefined}>
                 {row.items.map((it) => (
                   <li class="gal__item">
                     <figure>

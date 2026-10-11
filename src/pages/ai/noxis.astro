@@ -104,7 +104,7 @@ const rejected = [
   >
     <div class="rejected">
       <h3 class="t-mono">REJECTED DIRECTIONS</h3>
-      <ul class="rejected__row" role="list">
+      <ul class="rejected__row" role="list" data-carousel>
         {rejected.map((r) => (
           <li class="media rejected__tile">
             <Img src={r.image} alt={r.alt} width={332} extraWidths={[280]} sizes="(max-width: 767px) 280px, (max-width: 1440px) 23vw, 332px" />

@@ -24,3 +24,5 @@ if (clocks.length) {
     setInterval(tick, 60_000);
   }, 60_000 - (Date.now() % 60_000) + 50);
 }
+
+export {};

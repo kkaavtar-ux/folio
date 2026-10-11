@@ -1,7 +1,7 @@
 ---
 /**
  * SetGrid — one big tile (448) + 8 small tiles (216, 4×2) — Icon Pack sets and Bunpro "THE SET".
- * Figma: 314:1195 / 318:1527. Mobile: big tile full width, smalls in a 4-column grid.
+ * Figma: 314:1195 / 318:1527. Mobile: big tile full width, smalls as a 200px carousel.
  */
 import Img from '../Img.astro';
 import type { GItem } from './types';
@@ -21,11 +21,11 @@ const { label, big, small } = Astro.props;
     <div class:list={['media set__big', big.fit === 'contain' && 'set__contain']}>
       <Img src={big.image} alt={big.alt} width={448} extraWidths={[358]} sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1440px) 32vw, 448px" />
     </div>
-    <ul class="set__small" role="list">
+    <ul class="set__small" role="list" data-carousel>
       {
         small.map((s) => (
           <li class="media set__tile">
-            <Img src={s.image} alt={s.alt} width={216} extraWidths={[82]} sizes="(max-width: 767px) calc((100vw - 68px) / 4), (max-width: 1440px) 15vw, 216px" />
+            <Img src={s.image} alt={s.alt} width={216} extraWidths={[200]} sizes="(max-width: 767px) 200px, (max-width: 1440px) 15vw, 216px" />
           </li>
         ))
       }
@@ -54,6 +54,17 @@ const { label, big, small } = Astro.props;
   .set__tile { aspect-ratio: 1; }
   @media (max-width: 767px) {
     .set { gap: var(--space-12); }
-    .set__grid { grid-template-columns: 1fr; }
+    .set__grid { grid-template-columns: 1fr; gap: var(--space-12); }
+    .set__small {
+      display: flex;
+      gap: var(--space-12);
+      margin-right: calc(-1 * var(--layout-gutter));
+      padding-right: var(--layout-gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .set__small::-webkit-scrollbar { display: none; }
+    .set__tile { flex: none; width: 200px; scroll-snap-align: start; }
   }
 </style>

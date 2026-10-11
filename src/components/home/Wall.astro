@@ -91,7 +91,7 @@ const NONE: Record<string, string | boolean> = {};
   <!-- Mobile wall -->
   <div class="wall-m">
     <p class="t-h3 container">Renders, icon sets, AI pipelines and characters.</p>
-    <ul class="wall-m__strip" role="list">
+    <ul class="wall-m__strip" role="list" data-carousel>
       {
         imageTiles.map((tile) => (
           <li style={`--r:${tile.ratio}`}>

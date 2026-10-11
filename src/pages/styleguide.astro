@@ -199,7 +199,8 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
 </Base>
 
 <style>
-  .sg { padding-block: var(--layout-section-y); display: flex; flex-direction: column; gap: var(--space-96); }
+  .sg { padding-block: var(--layout-section-y); display: flex; flex-direction: column; gap: var(--space-96); overflow-wrap: anywhere; }
+  .sg__neutrals li { flex-wrap: wrap; }
   .sg__head { display: flex; flex-direction: column; gap: var(--space-16); }
   .sg__block { display: flex; flex-direction: column; gap: var(--space-16); }
   .sg__label { color: var(--text-muted); }
@@ -237,7 +238,7 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
   .sg__spacing { display: flex; flex-direction: column; gap: var(--space-8); margin-bottom: var(--space-16); }
   .sg__spacing li { display: flex; align-items: center; gap: var(--space-8); }
   .sg__bar { display: inline-block; height: var(--space-12); background: var(--section-product); }
-  .sg__radius { display: flex; align-items: flex-end; gap: var(--space-12); margin-bottom: var(--space-16); }
+  .sg__radius { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-12); margin-bottom: var(--space-16); }
   .sg__r { display: block; background: var(--surface-neutral); border-radius: var(--radius-base); }
   .sg__r--a { width: 155px; height: 108px; }
   .sg__r--b { width: 93px; height: 37px; }
@@ -251,6 +252,6 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
   @media (max-width: 767px) {
     .sg { gap: var(--space-48); }
     .sg__swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .sg__split { grid-template-columns: 1fr; }
+    .sg__split { grid-template-columns: minmax(0, 1fr); }
   }
 </style>

@@ -52,7 +52,7 @@ const thumbSizes = '(max-width: 767px) 280px, (max-width: 1440px) calc((100vw - 
 
     {
       project.media === 'strip' && (
-        <ul class="prow__strip" role="list" style={`--ratio:${ratio}`}>
+        <ul class="prow__strip" role="list" style={`--ratio:${ratio}`} data-carousel>
           {project.thumbs.map((t) => (
             <li>
               <a class="media prow__thumb" href={project.href} tabindex="-1" aria-hidden="true">

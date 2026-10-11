@@ -46,3 +46,5 @@ if (header) {
   window.addEventListener('resize', update, { passive: true });
   update();
 }
+
+export {};

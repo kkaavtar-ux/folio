@@ -70,3 +70,5 @@ if (menu && openBtn) {
     if (mq.matches && menu.classList.contains('is-open')) close();
   });
 }
+
+export {};

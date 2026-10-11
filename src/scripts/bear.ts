@@ -59,3 +59,5 @@ if (bear && hero) {
     if (inView) kick();
   }).observe(hero);
 }
+
+export {};

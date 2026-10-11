@@ -124,11 +124,11 @@ const steps = [
       My workflow always includes references for every single component of a visual — whether it’s 3D, graphics or UX. This is the overall pool that sets the vibe and aesthetics.
     </p>
     <div class="refs-wrap">
-      <ul class="refs" role="list">
+      <ul class="refs" role="list" data-carousel>
         {
           refs.map((r) => (
             <li class="media refs__tile">
-              <Img src={r.image} alt={r.alt} width={163} sizes="163px" />
+              <Img src={r.image} alt={r.alt} width={163} extraWidths={[280]} sizes="(max-width: 767px) 280px, 163px" />
             </li>
           ))
         }
@@ -154,7 +154,7 @@ const steps = [
       }
     </ol>
     <div class="shots-wrap">
-      <ul class="shots3" role="list">
+      <ul class="shots3" role="list" data-carousel>
         {
           [
             // Figma order: title screen, gameplay, labor lottery (= mechanics-3, -2, -1).
@@ -340,7 +340,16 @@ const steps = [
     .steps,
     .figs,
     .kv { grid-template-columns: 1fr; }
-    .refs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+    .refs {
+      display: flex;
+      gap: var(--space-12);
+      margin-right: calc(-1 * var(--layout-gutter));
+      padding-right: var(--layout-gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .refs__tile { flex: none; width: 280px; scroll-snap-align: start; }
     .fig__frame { height: auto; }
     .shots3 {
       display: flex;

@@ -160,3 +160,6 @@ a:focus-visible .media::after { opacity: 1; }
 .cs:not(.cs--band) + .cs:not(.cs--band) { padding-top: 0; }
 .cs.gal--hero { padding-top: var(--space-32); padding-bottom: 0; }
 .cs.gal--hero + .cs:not(.cs--band) { padding-top: var(--layout-section-y); }
+
+/* Carousel drift (scripts/carousel.ts): snapping is off only while the strip drifts. */
+[data-carousel].is-drifting { scroll-snap-type: none !important; }

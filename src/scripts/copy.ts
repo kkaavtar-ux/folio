@@ -22,3 +22,5 @@ document.addEventListener('click', async (e) => {
     if (el instanceof HTMLAnchorElement) window.location.href = el.href;
   }
 });
+
+export {};
