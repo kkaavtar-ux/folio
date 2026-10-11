@@ -1,0 +1,66 @@
+---
+/**
+ * Button — black, radius base, pad 12/24, .t-label white text.
+ * `disabled` renders the grey "Coming soon" variant (aria-disabled, not focusable as a link).
+ */
+interface Props {
+  href?: string;
+  download?: boolean | string;
+  disabled?: boolean;
+  type?: 'button' | 'submit';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, download, disabled = false, type = 'button', class: className, ...rest } = Astro.props;
+const classes = ['button', 't-label', disabled && 'button--disabled', className];
+---
+
+{
+  disabled ? (
+    <span class:list={classes} aria-disabled="true" {...rest}>
+      <slot />
+    </span>
+  ) : href ? (
+    <a class:list={classes} href={href} download={download} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button class:list={classes} type={type} {...rest}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+    width: max-content;
+    padding: var(--space-12) var(--space-24);
+    background: var(--surface-inverse);
+    color: var(--text-inverse);
+    border-radius: var(--radius-base);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 200ms var(--ease-out), transform 150ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (hover: hover) {
+    .button:not(.button--disabled):hover,
+    .button.is-hover { color: var(--section-product); }
+  }
+  .button:not(.button--disabled):active { transform: scale(0.97); }
+
+  .button--disabled {
+    background: var(--surface-neutral);
+    color: var(--text-primary);
+    cursor: default;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .button:active { transform: none; }
+  }
+</style>

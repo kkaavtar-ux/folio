@@ -1,0 +1,17 @@
+---
+/** Tag — small plaque (`s`) for categories on cards/rows. Interactive only when it links. */
+import Plaque, { type PlaqueColor } from './Plaque.astro';
+
+interface Props {
+  color?: PlaqueColor;
+  href?: string;
+  dense?: boolean;
+  current?: boolean;
+  join?: 'start' | 'end';
+  class?: string;
+}
+
+const { color = 'product', ...rest } = Astro.props;
+---
+
+<Plaque size="s" color={color} {...rest}><slot /></Plaque>

@@ -1,0 +1,259 @@
+---
+// Hidden style guide (noindex, not linked). Mirrors Figma "Style board" 291:2.
+import Base from '../layouts/Base.astro';
+import Plaque from '../components/Plaque.astro';
+import Tag from '../components/Tag.astro';
+import Button from '../components/Button.astro';
+
+const colors = [
+  { name: 'White', hex: '#FFFFFF', token: '--color-white', use: 'page background' },
+  { name: 'Black', hex: '#000000', token: '--color-black', use: 'all text · buttons', ink: true },
+  { name: 'Grey', hex: '#BBBBBB', token: '--section-about', use: 'neutral plaques · About' },
+  { name: 'Pink', hex: '#FF69D0', token: '--section-product', use: 'Product · interface' },
+  { name: 'Blue', hex: '#3869FF', token: '--section-3d', use: '3D' },
+  { name: 'Red', hex: '#FF0000', token: '--section-ai', use: 'AI' },
+  { name: 'Yellow', hex: '#FFDE22', token: '--section-comms', use: 'Comms' },
+];
+const neutrals = [
+  { token: '--surface-tile', hex: '#F4F4F4' },
+  { token: '--text-secondary', hex: '#444444' },
+  { token: '--text-muted', hex: '#777777' },
+];
+const type = [
+  { cls: 't-display', label: 'Display 120 / Bold' },
+  { cls: 't-h1', label: 'H1 72 / Bold' },
+  { cls: 't-h2', label: 'H2 48 / Bold — plaques, section titles' },
+  { cls: 't-h3', label: 'H3 28 / Medium — card titles' },
+  { cls: 't-lead', label: 'Lead 22 / Medium — intros' },
+  { cls: 't-body', label: 'Body 20 / Regular — intros, case text' },
+  { cls: 't-body-s', label: 'Body S 16 / Regular' },
+  { cls: 't-label', label: 'Label 18 / Medium — buttons' },
+  { cls: 't-plaque-s', label: 'Plaque S 24 / Bold — Vanya' },
+  { cls: 't-tag', label: 'Tag 16 / Bold' },
+  { cls: 't-mono', label: 'MONO 13 · DATES · META · HANDLES · 1376×720' },
+  { cls: 't-mono-s', label: 'MONO 12 · LABELS' },
+];
+const spacing = [4, 8, 12, 16, 24, 32, 48, 72, 96, 128];
+const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as const;
+---
+
+<Base title="Style guide — Vanya" description="Internal style guide." noindex>
+  <div class="container sg">
+    <header class="sg__head">
+      <h1 class="t-display">Style board</h1>
+      <p class="t-mono">Phase 1 · tokens from src/styles/tokens.css · resize below 768px for mobile values</p>
+    </header>
+
+    <!-- Colors -->
+    <section class="sg__block" aria-labelledby="sg-color">
+      <h2 id="sg-color" class="t-mono-s sg__label">COLOR · from abadir.net</h2>
+      <ul class="sg__swatches" role="list">
+        {
+          colors.map((c) => (
+            <li class:list={['sg__swatch', c.ink && 'sg__swatch--ink']} style={`background: var(${c.token})`}>
+              <span class="t-plaque-s">{c.name}</span>
+              <span class="t-mono-s">
+                {c.hex}
+                <br />
+                {c.use}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="sg__neutrals" role="list">
+        {
+          neutrals.map((n) => (
+            <li class="t-mono-s">
+              <span class="sg__chip" style={`background: var(${n.token})`} />
+              {n.token} {n.hex}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="t-mono-s sg__note">
+        Text is always black on every color. Color = section code. Bright colors appear as spots on
+        white, never as page fills.
+      </p>
+    </section>
+
+    <!-- Type -->
+    <section class="sg__block" aria-labelledby="sg-type">
+      <h2 id="sg-type" class="t-mono-s sg__label">TYPE · Space Grotesk + Geist Mono</h2>
+      <ul class="sg__type" role="list">
+        {type.map((t) => (
+          <li>
+            <span class="t-mono-s sg__meta">.{t.cls}</span>
+            <p class={t.cls}>{t.label}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="t-body sg__sample">
+        Arrows &amp; punctuation check: Open case → · Download CV ↓ · Back to top ↑ · ← All comms ·
+        Let’s talk. · 2025—26 · 1080×1080
+      </p>
+    </section>
+
+    <!-- Spacing + radius -->
+    <section class="sg__block sg__split" aria-labelledby="sg-space">
+      <div>
+        <h2 id="sg-space" class="t-mono-s sg__label">SPACING</h2>
+        <ul class="sg__spacing" role="list">
+          {spacing.map((s) => (
+            <li class="t-mono-s">
+              <span class="sg__bar" style={`width: var(--space-${s})`} />
+              {s}
+            </li>
+          ))}
+        </ul>
+        <p class="t-mono-s sg__note">
+          Gutter var(--layout-gutter) · section-y var(--layout-section-y) · title→content
+          var(--layout-title-gap) · grid gap var(--layout-grid-gap) · wall gap var(--layout-wall-gap)
+        </p>
+      </div>
+      <div>
+        <h2 class="t-mono-s sg__label">RADIUS · one value</h2>
+        <div class="sg__radius">
+          <span class="sg__r sg__r--a" />
+          <span class="sg__r sg__r--b" />
+          <span class="sg__r sg__r--c" />
+          <span class="sg__r sg__r--dot" />
+        </div>
+        <p class="t-mono-s sg__note">10 px everywhere (8 on mobile) · circle only for icon buttons</p>
+      </div>
+    </section>
+
+    <!-- Plaques -->
+    <section class="sg__block" aria-labelledby="sg-plaque">
+      <h2 id="sg-plaque" class="t-mono-s sg__label">PLAQUES · sizes</h2>
+      <div class="sg__stack">
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">xl · Display (list intros, white on own band)</span>
+          <Plaque size="xl" color="white" class="sg__on-band">Product</Plaque>
+        </div>
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">l · H1 · pad 6/20/8/20</span>
+          <Plaque size="l" color="product" as="h2">Product</Plaque>
+        </div>
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">m · H2</span>
+          <div class="row">
+            {sectionColors.map((c) => <Plaque size="m" color={c}>{c === 'white' ? 'White' : c === '3d' ? '3D' : c === 'ai' ? 'AI' : c[0].toUpperCase() + c.slice(1)}</Plaque>)}
+          </div>
+        </div>
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">s · Tag · pad 5/12/6/12 (header: 4/12/5/12)</span>
+          <div class="row">
+            <Tag color="product">Product</Tag>
+            <Tag color="3d">3D</Tag>
+            <Tag color="comms">Comms</Tag>
+            <Tag color="ai">AI</Tag>
+            <Tag color="white">Comms</Tag>
+            <Tag color="product" dense>Dense</Tag>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="t-mono-s sg__label">PLAQUES · states (hover the live ones)</h2>
+      <div class="sg__stack">
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">default / hover (black fill, label in section color + blur-morph) / current (outline) — live</span>
+          <div class="row">
+            <Plaque size="m" color="product" href="#sg-plaque">Product</Plaque>
+            <Plaque size="m" color="product" href="#sg-plaque" class="is-hover">Product</Plaque>
+            <Plaque size="m" color="product" href="#sg-plaque" current>Product</Plaque>
+          </div>
+        </div>
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">joined pair — live</span>
+          <div class="row sg__joined">
+            <Plaque size="m" color="about" href="#sg-plaque" join="start">About</Plaque>
+            <Plaque size="m" color="product" href="#sg-plaque" join="end">Contact</Plaque>
+          </div>
+        </div>
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">header tags — live</span>
+          <div class="row">
+            <Tag href="#sg-plaque" color="product" dense>Product</Tag>
+            <Tag href="#sg-plaque" color="3d" dense current>3D</Tag>
+            <Tag href="#sg-plaque" color="comms" dense>Comms</Tag>
+            <Tag href="#sg-plaque" color="ai" dense>AI</Tag>
+          </div>
+        </div>
+        <div class="sg__item">
+          <span class="t-mono-s sg__meta">mobile pill</span>
+          <Plaque size="menu" color="product" href="#sg-plaque">Menu ≡</Plaque>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="sg__block" aria-labelledby="sg-button">
+      <h2 id="sg-button" class="t-mono-s sg__label">BUTTONS · default / hover / disabled</h2>
+      <div class="row">
+        <Button href="#sg-button">Open case →</Button>
+        <Button href="#sg-button" class="is-hover">Open case →</Button>
+        <Button href="/cv.pdf" download>Download CV ↓</Button>
+        <Button href="#sg-button">Open</Button>
+        <Button disabled>Coming soon</Button>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .sg { padding-block: var(--layout-section-y); display: flex; flex-direction: column; gap: var(--space-96); }
+  .sg__head { display: flex; flex-direction: column; gap: var(--space-16); }
+  .sg__block { display: flex; flex-direction: column; gap: var(--space-16); }
+  .sg__label { color: var(--text-muted); }
+  .sg__meta { color: var(--text-muted); display: block; margin-bottom: var(--space-8); }
+  .sg__note { color: var(--text-muted); }
+
+  .sg__swatches {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: var(--space-8);
+  }
+  .sg__swatch {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    aspect-ratio: 140 / 170;
+    padding: var(--space-12);
+    border: 1px solid var(--surface-tile);
+    border-radius: var(--radius-base);
+  }
+  .sg__swatch--ink { color: var(--text-inverse); }
+  .sg__neutrals { display: flex; flex-wrap: wrap; gap: var(--space-24); }
+  .sg__neutrals li { display: flex; align-items: center; gap: var(--space-8); }
+  .sg__chip {
+    width: var(--space-24);
+    height: var(--space-24);
+    border-radius: var(--radius-base);
+    border: 1px solid var(--line-default);
+  }
+
+  .sg__type { display: flex; flex-direction: column; gap: var(--space-24); }
+  .sg__sample { color: var(--text-secondary); }
+
+  .sg__split { display: grid; grid-template-columns: 1fr 2fr; gap: var(--space-48); }
+  .sg__spacing { display: flex; flex-direction: column; gap: var(--space-8); margin-bottom: var(--space-16); }
+  .sg__spacing li { display: flex; align-items: center; gap: var(--space-8); }
+  .sg__bar { display: inline-block; height: var(--space-12); background: var(--section-product); }
+  .sg__radius { display: flex; align-items: flex-end; gap: var(--space-12); margin-bottom: var(--space-16); }
+  .sg__r { display: block; background: var(--surface-neutral); border-radius: var(--radius-base); }
+  .sg__r--a { width: 155px; height: 108px; }
+  .sg__r--b { width: 93px; height: 37px; }
+  .sg__r--c { width: 47px; height: 47px; }
+  .sg__r--dot { width: var(--space-24); height: var(--space-24); background: var(--surface-inverse); border-radius: 50%; }
+
+  .sg__stack { display: flex; flex-direction: column; gap: var(--space-32); }
+  .sg__on-band { outline: var(--layout-plaque-pad) solid var(--section-product); margin: var(--layout-plaque-pad); }
+  .sg__joined { gap: 0; }
+
+  @media (max-width: 767px) {
+    .sg { gap: var(--space-48); }
+    .sg__swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sg__split { grid-template-columns: 1fr; }
+  }
+</style>

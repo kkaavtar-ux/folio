@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import sg400 from '@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff2?url';
+import sg700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import type { SectionKey } from '../content/site';
+
+interface Props {
+  /** Full <title>. Home: "Vanya — Product Designer"; inner: "<Case> — Vanya". */
+  title: string;
+  description?: string;
+  section?: SectionKey | 'shots';
+  /** Home: header hidden while the hero is visible. */
+  headerOverHero?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = 'I design digital products end to end — and make 3D, comms and AI visuals.',
+  section,
+  headerOverHero = false,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" id="top">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <link rel="preload" href={sg700} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sg400} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header current={section} overHero={headerOverHero} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <div class="toast t-label" role="status" aria-live="polite" data-toast></div>
+  </body>
+</html>

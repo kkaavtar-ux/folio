@@ -1,0 +1,53 @@
+---
+// Phase 1: hero shell (no bear / plaques yet — Phase 2) + shared footer for review.
+import Base from '../layouts/Base.astro';
+import { person, tbilisiTime } from '../content/site';
+---
+
+<Base title="Vanya — Product Designer" headerOverHero>
+  <section class="hero" data-hero aria-label="Intro">
+    <div class="hero__inner">
+      <div class="hero__brand">
+        <p class="t-plaque-s">{person.name}</p>
+        <p class="t-body-s">{person.role}</p>
+      </div>
+      <p class="t-lead hero__lead">
+        I design digital products end to end — and make 3D, comms and AI visuals.
+      </p>
+      <div class="hero__meta t-mono">
+        <a class="link" href={`mailto:${person.email}`}>{person.email}</a>
+        <p>{person.city} · <time data-clock>{tbilisiTime()}</time> · RU / EN</p>
+        <a class="link" href="#contact">scroll ↓</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    background: var(--section-3d);
+  }
+  .hero__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: var(--page-max);
+    height: 900px;
+    margin-inline: auto;
+    padding: 28px var(--layout-gutter) var(--space-32);
+  }
+  .hero__brand .t-plaque-s { line-height: 26px; }
+  .hero__lead { max-width: 380px; margin-top: 73px; }
+  .hero__meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+  @media (max-width: 767px) {
+    .hero__inner { height: auto; min-height: 595px; padding-top: var(--space-24); }
+    .hero__brand { display: none; }
+    .hero__lead { margin-top: 0; max-width: none; }
+    .hero__meta { flex-direction: column; gap: var(--space-4); }
+    .hero__meta a[href='#contact'] { display: none; }
+  }
+</style>

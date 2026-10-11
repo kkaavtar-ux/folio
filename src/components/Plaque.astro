@@ -1,0 +1,164 @@
+---
+/**
+ * Plaque — the signature element: a colored rounded rectangle tightly wrapping a label.
+ * Sizes map to Figma: xl = Display, l = H1, m = H2, s = Tag (`dense` = header variant).
+ * With `href` it becomes interactive (hover: black fill + label in plaque color + blur-morph;
+ * press: scale .97; current/focus: 2px outline offset 3px).
+ */
+
+export type PlaqueColor = 'product' | '3d' | 'ai' | 'comms' | 'about' | 'white' | 'ink';
+export type PlaqueSize = 'xl' | 'l' | 'm' | 's' | 'menu';
+
+interface Props {
+  size?: PlaqueSize;
+  color?: PlaqueColor;
+  href?: string;
+  /** Element when not a link: span (default), h1, h2, button … */
+  as?: 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'p' | 'button';
+  /** Header variant of the small plaque (pad 4/12/5/12). */
+  dense?: boolean;
+  /** Marks the current section (outline state). */
+  current?: boolean;
+  /** Joined pair: square the inner corners. */
+  join?: 'start' | 'end';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  size = 'm',
+  color = 'product',
+  href,
+  as = 'span',
+  dense = false,
+  current = false,
+  join,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : as;
+const interactive = Boolean(href) || as === 'button';
+const classes = [
+  'plaque',
+  `plaque--${size}`,
+  `plaque--${color}`,
+  dense && 'plaque--dense',
+  interactive && 'plaque--interactive',
+  join && `plaque--join-${join}`,
+  className,
+];
+const attrs: Record<string, unknown> = href ? { href } : {};
+if (current) attrs['aria-current'] = 'page';
+---
+
+<Tag class:list={classes} {...attrs} {...rest}>
+  <span class="plaque__label"><slot /></span>
+</Tag>
+
+<style>
+  .plaque {
+    --plaque-bg: var(--section-product);
+    --plaque-fg: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    max-width: 100%;
+    background: var(--plaque-bg);
+    color: var(--plaque-fg);
+    border-radius: var(--radius-base);
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Colors */
+  .plaque--product { --plaque-bg: var(--section-product); }
+  .plaque--3d { --plaque-bg: var(--section-3d); }
+  .plaque--ai { --plaque-bg: var(--section-ai); }
+  .plaque--comms { --plaque-bg: var(--section-comms); }
+  .plaque--about { --plaque-bg: var(--section-about); }
+  .plaque--white { --plaque-bg: var(--color-white); }
+  .plaque--ink { --plaque-bg: var(--surface-inverse); --plaque-fg: var(--text-inverse); }
+
+  /* Sizes — padding values are Figma's plaque paddings (top/right/bottom/left). */
+  .plaque--xl {
+    font: 700 var(--size-display)/0.9 var(--font-sans);
+    letter-spacing: -0.03em;
+    padding: 8px var(--space-24) 12px;
+  }
+  .plaque--l {
+    font: 700 var(--size-h1)/1 var(--font-sans);
+    letter-spacing: -0.03em;
+    padding: 6px 20px 8px;
+  }
+  .plaque--m {
+    font: 700 var(--size-h2)/1 var(--font-sans);
+    letter-spacing: -0.03em;
+    padding: 6px 20px 8px;
+  }
+  .plaque--s {
+    font: 700 var(--size-tag)/1.2 var(--font-sans);
+    padding: 5px var(--space-12) 6px;
+  }
+  .plaque--s.plaque--dense { padding: var(--space-4) var(--space-12) 5px; }
+  /* Mobile header pill / mobile hero small plaques: Plaque S type in a small plaque. */
+  .plaque--menu {
+    font: 700 var(--size-plaque-s)/1.1 var(--font-sans);
+    letter-spacing: -0.01em;
+    padding: var(--space-4) var(--space-12) 5px;
+  }
+
+  /* Joined pair (About + Contact) */
+  .plaque--join-start { border-start-end-radius: 0; border-end-end-radius: 0; }
+  .plaque--join-end { border-start-start-radius: 0; border-end-start-radius: 0; }
+
+  /* Interactive */
+  .plaque--interactive {
+    position: relative;
+    cursor: pointer;
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+    transition:
+      background-color 200ms var(--ease-out),
+      color 200ms var(--ease-out),
+      outline-color 200ms var(--ease-out),
+      transform 150ms var(--ease-out);
+  }
+  .plaque__label { display: inline-block; }
+
+  @media (hover: hover) {
+    .plaque--interactive:hover,
+    .plaque--interactive.is-hover {
+      background: var(--surface-inverse);
+      color: var(--plaque-bg);
+    }
+    .plaque--interactive.plaque--ink:hover,
+    .plaque--interactive.plaque--ink.is-hover {
+      background: var(--color-white);
+      color: var(--text-primary);
+    }
+    .plaque--interactive:hover .plaque__label,
+    .plaque--interactive.is-hover .plaque__label {
+      animation: plaque-morph 280ms var(--ease-out);
+    }
+  }
+  .plaque--interactive:active { transform: scale(0.97); }
+  .plaque--interactive[aria-current='page'],
+  .plaque--interactive:focus-visible {
+    outline-color: var(--line-default);
+  }
+  /* Joined pair: lift the hovered/focused half so its outline isn't covered. */
+  .plaque--interactive:hover,
+  .plaque--interactive:focus-visible { z-index: 1; }
+
+  @keyframes plaque-morph {
+    0% { filter: blur(0); transform: scale(1); }
+    45% { filter: blur(6px); transform: scale(1.03); }
+    100% { filter: blur(0); transform: scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plaque--interactive:hover .plaque__label { animation: none; }
+    .plaque--interactive:active { transform: none; }
+  }
+</style>

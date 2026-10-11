@@ -1,0 +1,127 @@
+---
+/**
+ * Footer — on every page (#contact). Display line, 4 contact tiles, text links, bottom bar with live Tbilisi clock.
+ * Figma: Footer 292:133 (desktop) / 327:410 (mobile).
+ */
+import { contacts, person, tbilisiTime } from '../content/site';
+---
+
+<footer id="contact" class="footer">
+  <div class="container footer__inner">
+    <h2 class="t-display footer__title">
+      Open to make some <span class="footer__accent">visuals</span>. Let’s talk.
+    </h2>
+
+    <ul class="footer__tiles" role="list">
+      {
+        contacts.map((c) => (
+          <li>
+            <a
+              class:list={['footer__tile', `footer__tile--${c.color}`]}
+              href={c.href}
+              {...(c.copy
+                ? { 'data-copy': c.copy }
+                : { target: '_blank', rel: 'noopener noreferrer' })}
+            >
+              <span class="footer__tile-name">{c.label}</span>
+              <span class="t-mono">{c.handle}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="footer__links t-label" role="list">
+      <li><a class="link" href={person.cv} download>Download CV ↓</a></li>
+      <li><a class="link" href={`mailto:${person.email}`} data-copy={person.email}>Copy email</a></li>
+      <li><a class="link" href="#top">Back to top ↑</a></li>
+    </ul>
+
+    <div class="footer__bar t-mono-s">
+      <p>© 2026 Vanya</p>
+      <p>Updated Oct 2026 · Figma + code + Cinema 4D</p>
+      <p>{person.city} · <time data-clock>{tbilisiTime()}</time></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  import '../scripts/clock';
+  import '../scripts/copy';
+</script>
+
+<style>
+  .footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+    /* Figma: 160 top on desktop (128 + 32), 24 on mobile; 32 bottom. */
+    padding-top: calc(var(--space-128) + var(--space-32));
+    padding-bottom: var(--space-32);
+  }
+
+  .footer__accent { color: var(--section-product); }
+
+  .footer__tiles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .footer__tile {
+    --tile-fill: var(--section-product);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+    height: 330px;
+    padding: var(--space-24);
+    border: 1px solid var(--line-default);
+    border-radius: var(--radius-base);
+    transition: background-color 300ms var(--ease-out), border-color 300ms var(--ease-out);
+  }
+  .footer__tile--product { --tile-fill: var(--section-product); }
+  .footer__tile--3d { --tile-fill: var(--section-3d); }
+  .footer__tile--comms { --tile-fill: var(--section-comms); }
+  .footer__tile--ai { --tile-fill: var(--section-ai); }
+  @media (hover: hover) {
+    .footer__tile:hover,
+    .footer__tile.is-hover {
+      background: var(--tile-fill);
+      border-color: transparent;
+    }
+  }
+  .footer__tile:focus-visible {
+    background: var(--tile-fill);
+    border-color: transparent;
+  }
+  .footer__tile-name {
+    font: 700 var(--size-h2)/1 var(--font-sans);
+    letter-spacing: -0.03em;
+  }
+
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8) var(--space-32);
+  }
+
+  .footer__bar {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-16);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--line-default);
+  }
+
+  @media (max-width: 767px) {
+    .footer__inner { padding-top: var(--space-24); }
+    .footer__tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .footer__tile { height: 150px; padding: var(--space-16); }
+    .footer__tile-name {
+      font: 700 var(--size-h3)/1.2 var(--font-sans);
+      letter-spacing: -0.03em;
+    }
+    .footer__links { max-width: 260px; }
+    .footer__bar { flex-direction: column; gap: 0; }
+  }
+</style>

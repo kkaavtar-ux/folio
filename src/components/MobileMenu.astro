@@ -1,0 +1,101 @@
+---
+/**
+ * Mobile menu — full-screen white overlay with big plaques + email.
+ * JS (scripts/mobile-menu.ts): open/close, Esc, focus trap, body scroll lock.
+ * Without JS the "Menu ≡" link targets #site-menu and the overlay shows via :target.
+ */
+import Plaque from './Plaque.astro';
+import { sections, person, type SectionKey } from '../content/site';
+
+interface Props {
+  current?: SectionKey | 'shots';
+}
+
+const { current } = Astro.props;
+---
+
+<div
+  id="site-menu"
+  class="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu"
+  data-menu
+>
+  <div class="mobile-menu__top">
+    <a class="mobile-menu__brand" href="/">
+      <span class="t-plaque-s">{person.name}</span>
+      <span class="t-body-s">{person.role}</span>
+    </a>
+    <Plaque href="#" role="button" size="menu" color="ink" data-menu-close aria-label="Close menu">
+      ✕
+    </Plaque>
+  </div>
+
+  <nav class="mobile-menu__nav" aria-label="Menu">
+    <ul role="list">
+      {
+        sections.map((s) => (
+          <li>
+            <Plaque href={s.href} size="l" color={s.color} current={current === s.key}>
+              {s.label}
+            </Plaque>
+          </li>
+        ))
+      }
+      <li>
+        <Plaque href="/shots" size="l" color="ink" current={current === 'shots'}>Shots</Plaque>
+      </li>
+      <li class="mobile-menu__joined">
+        <Plaque href="/#about" size="l" color="about" join="start" data-menu-link>About</Plaque>
+        <Plaque href="/#contact" size="l" color="product" join="end" data-menu-link>Contact</Plaque>
+      </li>
+    </ul>
+  </nav>
+
+  <a class="mobile-menu__email t-mono link" href={`mailto:${person.email}`}>{person.email}</a>
+</div>
+
+<style>
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+    padding:
+      calc(var(--space-12) + env(safe-area-inset-top))
+      var(--layout-gutter)
+      calc(var(--space-24) + env(safe-area-inset-bottom));
+    background: var(--bg-page);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .mobile-menu:target,
+  .mobile-menu.is-open { display: flex; }
+
+  .mobile-menu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 35px;
+  }
+  .mobile-menu__brand { display: flex; flex-direction: column; }
+
+  .mobile-menu__nav ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+  .mobile-menu__joined { display: flex; }
+
+  .mobile-menu__email { margin-top: auto; }
+
+  /* Desktop never shows the overlay. */
+  @media (min-width: 768px) {
+    .mobile-menu:target,
+    .mobile-menu.is-open { display: none; }
+  }
+</style>
