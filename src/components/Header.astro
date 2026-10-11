@@ -36,6 +36,9 @@ const { current, overHero = false } = Astro.props;
             </li>
           ))
         }
+        <li>
+          <Tag href="/shots" color="ink" dense current={current === 'shots'}>Shots</Tag>
+        </li>
       </ul>
     </nav>
 

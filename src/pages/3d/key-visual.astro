@@ -6,7 +6,7 @@ import Gallery from '../../components/case/Gallery.astro';
 import NextProject from '../../components/case/NextProject.astro';
 
 import kvFinal from '../../assets/images/3d/key-visual/final.webp';
-import alisaKv from '../../assets/images/comms/alisa/kv-1080x1080.webp';
+import wallpaperHero from '../../assets/images/3d/wallpaper/final-03.webp';
 import type { ImageMetadata } from 'astro';
 
 const rejectedFiles = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/3d/key-visual/rejected-*.webp', { eager: true });
@@ -21,7 +21,7 @@ const rows = [{ ratio: 4 / 3, cols: 3, mobile: 'grid' as const, items: rejected 
   head={{
     band: '3d',
     tag: '3D',
-    no: 'No. 03 · ©2025',
+    no: 'No. 01 · ©2025',
     all: { label: 'All 3D', href: '/3d' },
     title: 'Bunpro key visual',
     lead: 'A key visual for an existing product',
@@ -50,12 +50,12 @@ const rows = [{ ratio: 4 / 3, cols: 3, mobile: 'grid' as const, items: rejected 
   />
 
   <NextProject
-    label="NEXT · SECTION"
-    title="Comms"
-    lead="Key visuals, banners and special projects"
-    href="/comms"
-    band="comms"
-    image={alisaKv}
+    label="NEXT · 02 / 03"
+    title="Primitives · wallpaper"
+    lead="Abstract wallpapers in the spirit of Windows"
+    href="/3d/wallpaper"
+    band="3d"
+    image={wallpaperHero}
     thumb={{ w: 400, h: 300 }}
   />
 </Case>
