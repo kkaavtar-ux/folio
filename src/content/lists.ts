@@ -33,10 +33,7 @@ import amplitude from '../assets/images/shots/amplitude.webp';
 import doTheRightThing from '../assets/images/shots/do-the-right-thing.webp';
 import creditLimit from '../assets/images/shots/credit-limit.webp';
 import persona5 from '../assets/images/shots/persona-5.webp';
-import mortgageRed from '../assets/images/shots/mortgage-red.webp';
-import deposit from '../assets/images/shots/deposit.webp';
 import finalFantasy from '../assets/images/shots/final-fantasy-vii.webp';
-import mortgageBlue from '../assets/images/shots/mortgage-blue.webp';
 import bookingNewYork from '../assets/images/shots/booking-new-york.webp';
 import spatialLab from '../assets/images/shots/spatial-lab.webp';
 import walmartCash from '../assets/images/shots/walmart-cash.webp';
@@ -259,7 +256,8 @@ export const lists: Record<SectionKey, ListPage> = {
 
 export const shotsIntro: ListIntro = {
   title: 'Shots',
-  count: '13 shots · 2025—26',
+  // Was "13 shots" in PAGES.md; 3 low-res shots removed by Vanya (2026-10-12).
+  count: '10 shots · 2025—26',
   lead: 'Banners, UI shots and explorations from daily work — the stuff between the cases.',
   band: 'ink',
   plaque: 'about',
@@ -271,21 +269,19 @@ export interface Shot {
   fan?: boolean; // "Fan concept · not affiliated"
 }
 
-/** Masonry columns, top→bottom (PAGES.md 06 Shots). */
+/** Masonry columns, top→bottom. Order from PAGES.md minus the 3 removed shots,
+ * rebalanced so both columns end at a similar height. */
 export const shotColumns: Shot[][] = [
   [
     { image: crackItOpen, alt: 'Crack it open: tennis ball can banner on olive green' },
     { image: filtersTooTight, alt: 'Filters too tight: empty-state UI with a 3D bowl of travel icons' },
-    { image: amplitude, alt: 'Your first 4 steps in Amplitude: onboarding banner on green' },
-    { image: doTheRightThing, alt: 'Do the Right Thing: film poster layout in blue and red' },
     { image: creditLimit, alt: 'Credit limit: blurred ruble amounts next to an application form' },
+    { image: amplitude, alt: 'Your first 4 steps in Amplitude: onboarding banner on green' },
     { image: persona5, alt: 'Persona 5 concept page on red', fan: true },
-    { image: mortgageRed, alt: 'Mortgage insurance banner with red stairs' },
   ],
   [
-    { image: deposit, alt: 'Deposit and savings account banners with a white tower' },
     { image: finalFantasy, alt: 'Final Fantasy VII concept page', fan: true },
-    { image: mortgageBlue, alt: 'Mortgage insurance banner with glass tiles' },
+    { image: doTheRightThing, alt: 'Do the Right Thing: film poster layout in blue and red' },
     { image: bookingNewYork, alt: 'Booking confirmed in New York: green confirmation screen' },
     { image: spatialLab, alt: 'Spatial Lab landing hero with a wireframe VR headset' },
     { image: walmartCash, alt: 'Walmart Cash concept page', fan: true },

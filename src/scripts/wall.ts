@@ -1,6 +1,6 @@
 // Home 3D & AI wall behaviour (BRIEF §4.7, Figma note 342:1342).
 // - each row auto-scrolls at its own speed/direction, seamless loop (items duplicated in markup)
-// - cursor over the wall: vertical wheel scrolls the rows horizontally
+// - vertical wheel scrolls the page; horizontal swipe / Shift+wheel moves the wall
 // - hover pauses the row under the cursor; drag works (pointer events + inertia)
 // - filter All / 3D / AI dims other categories (CSS via data-filter)
 // - reduced motion: no auto-scroll; rAF only while the wall is in view
@@ -92,12 +92,16 @@ if (wall) {
     });
   });
 
-  // ── Wheel → horizontal ─────────────────────────
+  // ── Horizontal wheel only ──────────────────
+  // Vertical wheel always scrolls the page (Vanya: the wall must never trap scrolling).
+  // A horizontal trackpad swipe or Shift + wheel moves the wall.
   wall.addEventListener(
     'wheel',
     (e) => {
       if (!desktop.matches || e.ctrlKey) return;
-      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      if (!horizontal && !e.shiftKey) return;
+      const delta = horizontal ? e.deltaX : e.deltaY;
       if (!delta) return;
       e.preventDefault();
       const px = e.deltaMode === 1 ? delta * 16 : delta;

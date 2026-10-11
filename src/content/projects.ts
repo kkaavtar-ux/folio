@@ -58,7 +58,7 @@ export interface WallColumn {
 }
 
 // Home → 3D & AI wall (Vanya, 2026-10-12): bento of frames at their ORIGINAL aspect ratios.
-// Content: all 3D incl. rejected directions, a curated slice of AI (fewer NOXIS/Rilo) and every shot.
+// Content: approved 3D finals, a curated slice of AI (fewer NOXIS/Rilo) and the shots.
 const wallFiles = import.meta.glob<{ default: ImageMetadata }>(
   ['../assets/images/{3d,ai,shots}/**/*.webp', '../assets/images/home/wall-vr-headset.webp'],
   { eager: true },
@@ -112,8 +112,9 @@ function shuffle<T>(items: T[], seed = 11): T[] {
 const wallImages: WallTile[] = shuffle(
   Object.entries(wallFiles)
     .filter(([path]) => {
-      // 3D rejected directions stay in (Vanya: "more 3D"); AI style references stay out.
-      if (/reference\.webp/.test(path)) return false;
+      // Approved finals only: no rejected directions, no AI style references,
+      // no low-res shots (mortgage ×2, deposit — removed by Vanya 2026-10-12).
+      if (/rejected-|reference\.webp|shots\/(mortgage-red|mortgage-blue|deposit)\.webp/.test(path)) return false;
       const ai = path.match(/\/ai\/(.+)\.webp$/);
       return ai ? AI_PICKS.has(ai[1]) : true;
     })
