@@ -1,8 +1,9 @@
 ---
 /**
  * Home → 3D & AI wall (Figma 292:2; behaviour note 342:1342; mobile 327:316).
- * Per Vanya (2026-10-12): uniform 360×360 squares in 3 rows that move together as one grid,
- * so columns always line up. Content: every final 3D / AI image + all shots.
+ * Per Vanya (2026-10-12): bento of frames at their original aspect ratios — columns of 1–4
+ * stacked tiles whose widths are solved to fill the wall height exactly (content/projects.ts → pack()).
+ * The whole wall moves together. Content: all 3D, curated AI, every shot.
  * Desktop: the grid is duplicated once for a seamless loop (copy is aria-hidden / inert).
  *   JS (scripts/wall.ts): auto-scroll, wheel → horizontal, hover pause, drag + inertia, filter.
  *   No JS: the grid is a plain horizontally scrollable strip, filter hidden.
@@ -11,7 +12,7 @@
 import Plaque from '../Plaque.astro';
 import Button from '../Button.astro';
 import Img from '../Img.astro';
-import { wallTiles, type WallTile } from '../../content/projects';
+import { wallTiles, wallColumns, WALL_HEIGHT, type WallTile } from '../../content/projects';
 
 type ImageTile = Extract<WallTile, { kind: 'image' }>;
 const imageTiles = wallTiles.filter((t): t is ImageTile => t.kind === 'image');
@@ -33,36 +34,46 @@ const NONE: Record<string, string | boolean> = {};
   </div>
 
   <!-- Desktop wall -->
-  <div class="wall" data-wall data-filter="all">
+  <div class="wall" data-wall data-filter="all" style={`--wall-h:${WALL_HEIGHT}px`}>
     <div class="wall__viewport" data-row data-speed="18" data-dir="1">
       <div class="wall__track" data-track>
         {
           [0, 1].map((copy) => (
             <div class:list={['wall__grid', copy === 1 && 'wall__dupe']} {...(copy === 1 ? DUPE : NONE)}>
-              {wallTiles.map((tile) => {
-                if (tile.kind === 'intro')
-                  return (
-                    <div class="wall__tile wall__tile--intro">
-                      <p class="t-mono-s">3D / AI</p>
-                      <p class="t-h3">Renders, icon sets, AI pipelines and characters.</p>
-                    </div>
-                  );
-                if (tile.kind === 'next')
-                  return (
-                    <div class="wall__tile wall__tile--next">
-                      <p class="t-mono-s">NEXT</p>
-                      <p class="t-h3">Comms work</p>
-                      <Button href="/comms">Open</Button>
-                    </div>
-                  );
-                return (
-                  <a class="wall__tile wall__tile--image" href={tile.href} data-cat={tile.category} draggable="false">
-                    <div class="media wall__media">
-                      <Img src={tile.image} alt={copy === 1 ? '' : tile.alt} width={360} sizes="360px" />
-                    </div>
-                  </a>
-                );
-              })}
+              {wallColumns.map((col) => (
+                <div class="wall__col" style={`--w:${col.width}px`}>
+                  {col.tiles.map((tile) => {
+                    const style = `--r:${tile.ratio}`;
+                    if (tile.kind === 'intro')
+                      return (
+                        <div class="wall__tile wall__tile--intro" style={style}>
+                          <p class="t-mono-s">3D / AI</p>
+                          <p class="t-h3">Renders, icon sets, AI pipelines and characters.</p>
+                        </div>
+                      );
+                    if (tile.kind === 'next')
+                      return (
+                        <div class="wall__tile wall__tile--next" style={style}>
+                          <p class="t-mono-s">NEXT</p>
+                          <p class="t-h3">Comms work</p>
+                          <Button href="/comms">Open</Button>
+                        </div>
+                      );
+                    return (
+                      <a class="wall__tile wall__tile--image" href={tile.href} data-cat={tile.category} draggable="false" style={style}>
+                        <div class="media wall__media">
+                          <Img
+                            src={tile.image}
+                            alt={copy === 1 ? '' : tile.alt}
+                            width={Math.round(col.width)}
+                            sizes={`${Math.round(col.width)}px`}
+                          />
+                        </div>
+                      </a>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
           ))
         }
@@ -83,9 +94,9 @@ const NONE: Record<string, string | boolean> = {};
     <ul class="wall-m__strip" role="list">
       {
         imageTiles.map((tile) => (
-          <li>
+          <li style={`--r:${tile.ratio}`}>
             <a href={tile.href} class="media wall-m__media">
-              <Img src={tile.image} alt={tile.alt} width={200} sizes="200px" />
+              <Img src={tile.image} alt={tile.alt} width={Math.round(200 * tile.ratio)} sizes={`${Math.round(200 * tile.ratio)}px`} />
             </a>
           </li>
         ))
@@ -118,7 +129,6 @@ const NONE: Record<string, string | boolean> = {};
 
   /* ── Desktop wall ───────────────────────────── */
   .wall {
-    --tile: 360px;
     position: relative;
     user-select: none;
   }
@@ -138,25 +148,36 @@ const NONE: Record<string, string | boolean> = {};
     will-change: transform;
   }
   .wall__grid {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(3, var(--tile));
-    grid-auto-columns: var(--tile);
+    display: flex;
     gap: var(--layout-wall-gap);
+    height: var(--wall-h);
   }
   .wall__dupe { display: none; }
-  :global(.js) .wall__dupe { display: grid; }
+  :global(.js) .wall__dupe { display: flex; }
 
+  /* Column width is solved at build time so its tiles fill --wall-h exactly. */
+  .wall__col {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-wall-gap);
+    width: var(--w);
+  }
   .wall__tile {
-    width: var(--tile);
-    height: var(--tile);
+    flex: none;
+    width: 100%;
+    aspect-ratio: var(--r);
     border-radius: var(--radius-base);
   }
+  /* Absorb sub-pixel rounding in the last tile so columns end flush. */
+  .wall__col > :last-child { flex: 1 1 auto; aspect-ratio: auto; min-height: 0; }
   .wall__tile--image { display: block; }
   .wall__media { width: 100%; height: 100%; }
 
   .wall__tile--intro,
   .wall__tile--next {
+    min-height: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -222,8 +243,8 @@ const NONE: Record<string, string | boolean> = {};
     .wall-m__strip li { flex: none; scroll-snap-align: start; }
     .wall-m__media {
       display: block;
-      width: 200px;
       height: 200px;
+      aspect-ratio: var(--r);
     }
   }
 </style>

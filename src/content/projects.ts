@@ -47,16 +47,33 @@ export const homeComms: CommsCard[] = [
 export type WallCategory = '3d' | 'ai' | 'shots';
 
 export type WallTile =
-  | { kind: 'image'; category: WallCategory; href: string; image: ImageMetadata; alt: string }
-  | { kind: 'intro' }
-  | { kind: 'next' };
+  | { kind: 'image'; category: WallCategory; href: string; image: ImageMetadata; alt: string; ratio: number }
+  | { kind: 'intro'; ratio: number }
+  | { kind: 'next'; ratio: number };
 
-// Home → 3D & AI wall: every final 3D / AI image + all shots (Vanya, 2026-10-12).
-// Excluded: rejected directions and third-party style references.
+export interface WallColumn {
+  /** Column width (px) chosen so the stacked tiles fill the wall height exactly. */
+  width: number;
+  tiles: WallTile[];
+}
+
+// Home → 3D & AI wall (Vanya, 2026-10-12): bento of frames at their ORIGINAL aspect ratios.
+// Content: all 3D incl. rejected directions, a curated slice of AI (fewer NOXIS/Rilo) and every shot.
 const wallFiles = import.meta.glob<{ default: ImageMetadata }>(
-  ['../assets/images/{3d,ai,shots}/**/*.webp', '../assets/images/home/wall-*.webp'],
+  ['../assets/images/{3d,ai,shots}/**/*.webp', '../assets/images/home/wall-vr-headset.webp'],
   { eager: true },
 );
+
+/** Which AI frames make the cut (file stems relative to images/ai/). */
+const AI_PICKS = new Set([
+  'icon-pack/set-01/icon-01', 'icon-pack/set-01/icon-03', 'icon-pack/set-01/icon-07',
+  'icon-pack/set-02/icon-01', 'icon-pack/set-02/icon-05', 'icon-pack/set-02/icon-06',
+  'icon-pack/set-03/icon-01', 'icon-pack/set-03/icon-03', 'icon-pack/set-03/icon-07',
+  'noxis/billboard', 'noxis/billboard-1', 'noxis/city-banner', 'noxis/merch-1',
+  'noxis/product-10', 'noxis/product-shot', 'noxis/social-media-1', 'noxis/package',
+  'rilo/hero-pose', 'rilo/character-sheet', 'rilo/emotions', 'rilo/pose-03',
+  'rilo/pose-07', 'rilo/scene-02', 'rilo/scene-05', 'rilo/scene-09',
+]);
 
 /** Folder → case link + readable name for alt text. */
 const wallGroups: { match: string; category: WallCategory; href: string; name: string }[] = [
@@ -65,7 +82,6 @@ const wallGroups: { match: string; category: WallCategory; href: string; name: s
   { match: '/3d/key-visual/', category: '3d', href: '/3d/key-visual', name: 'Bunpro key visual' },
   { match: '/ai/icon-pack/', category: 'ai', href: '/ai/icon-pack', name: '3D Icon Pack' },
   { match: '/ai/noxis/', category: 'ai', href: '/ai/noxis', name: 'NOXIS' },
-  { match: '/home/wall-noxis', category: 'ai', href: '/ai/noxis', name: 'NOXIS' },
   { match: '/ai/rilo/', category: 'ai', href: '/ai/rilo', name: 'Rilo' },
   { match: '/home/wall-vr', category: 'shots', href: '/shots', name: 'Spatial Lab' },
   { match: '/shots/', category: 'shots', href: '/shots', name: 'Shot' },
@@ -82,7 +98,7 @@ const humanize = (path: string) =>
     .replace(/\bset (\d+) icon (\d+)/, 'set $1, icon $2');
 
 // Deterministic shuffle (same order every build) so categories mix on the wall.
-function shuffle<T>(items: T[], seed = 7): T[] {
+function shuffle<T>(items: T[], seed = 11): T[] {
   const a = [...items];
   let s = seed;
   const rnd = () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
@@ -95,7 +111,12 @@ function shuffle<T>(items: T[], seed = 7): T[] {
 
 const wallImages: WallTile[] = shuffle(
   Object.entries(wallFiles)
-    .filter(([path]) => !/rejected-|reference\.webp|\/home\/bear/.test(path))
+    .filter(([path]) => {
+      // 3D rejected directions stay in (Vanya: "more 3D"); AI style references stay out.
+      if (/reference\.webp/.test(path)) return false;
+      const ai = path.match(/\/ai\/(.+)\.webp$/);
+      return ai ? AI_PICKS.has(ai[1]) : true;
+    })
     .map(([path, mod]) => {
       const group = wallGroups.find((g) => path.includes(g.match))!;
       return {
@@ -104,9 +125,42 @@ const wallImages: WallTile[] = shuffle(
         href: group.href,
         image: mod.default,
         alt: `${group.name} — ${humanize(path)}`,
+        ratio: mod.default.width / mod.default.height,
       };
     }),
 );
 
-/** Tiles in column order (3 per column): intro first, "Next" last. */
-export const wallTiles: WallTile[] = [{ kind: 'intro' }, ...wallImages, { kind: 'next' }];
+/** Wall geometry: total height = 3 × 360 + 2 × 8 (Figma 292:9). */
+export const WALL_HEIGHT = 1096;
+export const WALL_GAP = 8;
+
+/**
+ * Pack tiles into columns: each column stacks 1–4 tiles at their own aspect ratio;
+ * its width is solved so the stack fills WALL_HEIGHT exactly:
+ *   W = (H − gap·(n−1)) / Σ(1 / ratio)
+ * Greedy: take the n (1–4) whose W lands closest to ~460px within 280–760.
+ */
+function pack(tiles: WallTile[], height: number, gap: number): WallColumn[] {
+  const columns: WallColumn[] = [];
+  let i = 0;
+  while (i < tiles.length) {
+    let best = { n: 1, width: Infinity, score: Infinity };
+    for (let n = 1; n <= 4 && i + n <= tiles.length; n++) {
+      const inv = tiles.slice(i, i + n).reduce((sum, t) => sum + 1 / t.ratio, 0);
+      const width = (height - gap * (n - 1)) / inv;
+      const score = Math.abs(width - 460) + (width < 280 || width > 760 ? 1000 : 0);
+      if (score < best.score) best = { n, width, score };
+    }
+    columns.push({ width: Math.round(best.width * 100) / 100, tiles: tiles.slice(i, i + best.n) });
+    i += best.n;
+  }
+  return columns;
+}
+
+/** Intro tile first, "Next" last; text tiles keep the Figma 440×360 / 420×360 shapes. */
+export const wallTiles: WallTile[] = [
+  { kind: 'intro', ratio: 440 / 360 },
+  ...wallImages,
+  { kind: 'next', ratio: 420 / 360 },
+];
+export const wallColumns: WallColumn[] = pack(wallTiles, WALL_HEIGHT, WALL_GAP);
