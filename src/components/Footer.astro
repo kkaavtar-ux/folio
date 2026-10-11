@@ -8,14 +8,14 @@ import { contacts, person, tbilisiTime } from '../content/site';
 
 <footer id="contact" class="footer">
   <div class="container footer__inner">
-    <h2 class="t-display footer__title">
+    <h2 class="t-display footer__title" data-reveal="blur">
       Open to make some <span class="footer__accent">visuals</span>. Let’s talk.
     </h2>
 
     <ul class="footer__tiles" role="list">
       {
         contacts.map((c) => (
-          <li>
+          <li data-reveal="fade">
             <a
               class:list={['footer__tile', `footer__tile--${c.color}`]}
               href={c.href}

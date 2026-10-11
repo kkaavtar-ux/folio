@@ -2,8 +2,9 @@
 /**
  * Plaque — the signature element: a colored rounded rectangle tightly wrapping a label.
  * Sizes map to Figma: xl = Display, l = H1, m = H2, s = Tag (`dense` = header variant).
- * With `href` it becomes interactive (hover: label blur-morph; press: scale .97).
- * No outline for hover or current section — only :focus-visible gets one (a11y).
+ * With `href` it becomes interactive. Hover (Vanya, 2026-10-12): the plaque turns grey and the
+ * label takes the plaque's section color (`accent` overrides it, e.g. the white 3D plaque → blue).
+ * Press: scale .97. No outline except :focus-visible (a11y).
  */
 
 export type PlaqueColor = 'product' | '3d' | 'ai' | 'comms' | 'about' | 'white' | 'ink';
@@ -21,6 +22,8 @@ interface Props {
   current?: boolean;
   /** Joined pair: square the inner corners. */
   join?: 'start' | 'end';
+  /** Label color on hover (defaults to the plaque's own color). */
+  accent?: PlaqueColor;
   class?: string;
   [key: string]: unknown;
 }
@@ -33,6 +36,7 @@ const {
   dense = false,
   current = false,
   join,
+  accent,
   class: className,
   ...rest
 } = Astro.props;
@@ -46,6 +50,7 @@ const classes = [
   dense && 'plaque--dense',
   interactive && 'plaque--interactive',
   join && `plaque--join-${join}`,
+  accent && `plaque--accent-${accent}`,
   className,
 ];
 const attrs: Record<string, unknown> = href ? { href } : {};
@@ -72,13 +77,18 @@ if (current) attrs['aria-current'] = 'page';
   }
 
   /* Colors */
-  .plaque--product { --plaque-bg: var(--section-product); }
-  .plaque--3d { --plaque-bg: var(--section-3d); }
-  .plaque--ai { --plaque-bg: var(--section-ai); }
-  .plaque--comms { --plaque-bg: var(--section-comms); }
-  .plaque--about { --plaque-bg: var(--section-about); }
-  .plaque--white { --plaque-bg: var(--color-white); }
-  .plaque--ink { --plaque-bg: var(--surface-inverse); --plaque-fg: var(--text-inverse); }
+  /* --plaque-accent = label color on hover (over the grey hover fill). */
+  .plaque--product { --plaque-bg: var(--section-product); --plaque-accent: var(--section-product); }
+  .plaque--3d { --plaque-bg: var(--section-3d); --plaque-accent: var(--section-3d); }
+  .plaque--ai { --plaque-bg: var(--section-ai); --plaque-accent: var(--section-ai); }
+  .plaque--comms { --plaque-bg: var(--section-comms); --plaque-accent: var(--section-comms); }
+  .plaque--about { --plaque-bg: var(--section-about); --plaque-accent: var(--color-white); }
+  .plaque--white { --plaque-bg: var(--color-white); --plaque-accent: var(--color-white); }
+  .plaque--ink { --plaque-bg: var(--surface-inverse); --plaque-fg: var(--text-inverse); --plaque-accent: var(--color-black); }
+  .plaque--accent-product { --plaque-accent: var(--section-product); }
+  .plaque--accent-3d { --plaque-accent: var(--section-3d); }
+  .plaque--accent-ai { --plaque-accent: var(--section-ai); }
+  .plaque--accent-comms { --plaque-accent: var(--section-comms); }
 
   /* Sizes — padding values are Figma's plaque paddings (top/right/bottom/left). */
   .plaque--xl {
@@ -119,29 +129,26 @@ if (current) attrs['aria-current'] = 'page';
   .plaque--interactive {
     position: relative;
     cursor: pointer;
-    transition: transform 150ms var(--ease-out);
+    transition:
+      background-color 200ms var(--ease-out),
+      color 200ms var(--ease-out),
+      transform 150ms var(--ease-out);
   }
   .plaque__label { display: inline-block; }
 
-  /* Hover = label blur-morph only; plaque color and outline stay unchanged. */
+  /* Hover: grey plaque, label in the section color. */
   @media (hover: hover) {
-    .plaque--interactive:hover .plaque__label,
-    .plaque--interactive.is-hover .plaque__label {
-      animation: plaque-morph 280ms var(--ease-out);
+    .plaque--interactive:hover,
+    .plaque--interactive.is-hover {
+      background: var(--surface-neutral);
+      color: var(--plaque-accent);
     }
   }
   .plaque--interactive:active { transform: scale(0.97); }
   /* Keyboard focus keeps the global outline; lift it above a joined neighbour. */
   .plaque--interactive:focus-visible { z-index: 1; }
 
-  @keyframes plaque-morph {
-    0% { filter: blur(0); transform: scale(1); }
-    45% { filter: blur(6px); transform: scale(1.03); }
-    100% { filter: blur(0); transform: scale(1); }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .plaque--interactive:hover .plaque__label { animation: none; }
     .plaque--interactive:active { transform: none; }
   }
 </style>

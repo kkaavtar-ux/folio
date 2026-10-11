@@ -15,7 +15,7 @@ interface Props {
 const { label, big, small } = Astro.props;
 ---
 
-<div class="set">
+<div class="set" data-reveal="fade">
   <h2 class="t-mono">{label}</h2>
   <div class="set__grid">
     <div class:list={['media set__big', big.fit === 'contain' && 'set__contain']}>

@@ -15,7 +15,7 @@ import { shotsIntro, shotColumns } from '../content/lists';
           <ul class="shots__col" role="list">
             {column.map((shot) => (
               <li>
-                <figure class="shot">
+                <figure class="shot" data-reveal="fade">
                   <div class="media shot__media">
                     <Img
                       src={shot.image}

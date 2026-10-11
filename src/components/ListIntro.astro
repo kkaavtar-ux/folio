@@ -17,11 +17,11 @@ const { intro } = Astro.props;
 
 <section class:list={['intro', `intro--${intro.band}`]} aria-labelledby="page-title">
   <div class="container intro__inner">
-    <div class="intro__title">
+    <div class="intro__title" data-reveal="blur">
       <Plaque size="xl" color={intro.plaque} as="h1" id="page-title">{intro.title}</Plaque>
       <p class="t-mono intro__count">{intro.count}</p>
     </div>
-    <p class="t-lead intro__lead">{intro.lead}</p>
+    <p class="t-lead intro__lead" data-reveal="fade">{intro.lead}</p>
   </div>
 </section>
 

@@ -24,7 +24,7 @@ const { label, title, lead, href, band, image, thumb } = Astro.props;
 
 <section class="cs np-wrap" aria-label="Next project">
   <div class="container">
-    <a class:list={['np', `np--${band}`]} href={href}>
+    <a class:list={['np', `np--${band}`]} href={href} data-reveal="fade">
       <div class="np__text">
         <p class="t-mono">{label}</p>
         <p class="t-h1 np__title">{title} <Arrow /></p>

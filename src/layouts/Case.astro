@@ -2,6 +2,7 @@
 /** Case page shell: Base + CaseHead; page content (blocks + NextProject) goes in the slot. */
 import Base from './Base.astro';
 import CaseHead from '../components/case/CaseHead.astro';
+import ProgressBar from '../components/case/ProgressBar.astro';
 import type { SectionKey } from '../content/site';
 
 type HeadProps = Parameters<typeof CaseHead>[0];
@@ -15,6 +16,7 @@ const { section, head } = Astro.props;
 ---
 
 <Base title={`${head.title} — Vanya`} description={head.lead} section={section}>
+  <ProgressBar band={head.band} />
   <CaseHead {...head} />
   <slot />
 </Base>

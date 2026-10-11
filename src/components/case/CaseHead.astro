@@ -29,10 +29,10 @@ const { band, tag, no, all, title, lead, meta } = Astro.props;
       <a class="t-mono link" href={all.href}><Arrow dir="left" /> {all.label}</a>
     </div>
     <div class="ch__title">
-      <h1 class="t-display">{title}</h1>
+      <h1 class="t-display" data-reveal="blur">{title}</h1>
       <p class="t-lead">{lead}</p>
     </div>
-    <dl class="ch__meta">
+    <dl class="ch__meta" data-reveal="fade">
       {
         meta.map((m) => (
           <div>

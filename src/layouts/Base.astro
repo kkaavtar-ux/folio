@@ -4,6 +4,7 @@ import sg400 from '@fontsource/space-grotesk/files/space-grotesk-latin-400-norma
 import sg700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Preloader from '../components/Preloader.astro';
 import type { SectionKey } from '../content/site';
 
 interface Props {
@@ -47,9 +48,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL('/og.png', Astro.site)} />
     <meta name="twitter:card" content="summary_large_image" />
-    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        // Preloader: first visit per session, never with reduced motion. Failsafe after 4s.
+        try {
+          if (!sessionStorage.getItem('vk-pre') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            d.classList.add('preload');
+            setTimeout(function () { d.classList.remove('preload'); }, 4000);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
+    <Preloader />
     <a class="skip-link" href="#main">Skip to content</a>
     <Header current={section} overHero={headerOverHero} />
     <main id="main" tabindex="-1">
@@ -59,6 +73,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <div class="toast t-label" role="status" aria-live="polite" data-toast></div>
     <script>
       import '../scripts/carousel';
+      import '../scripts/reveal';
     </script>
   </body>
 </html>

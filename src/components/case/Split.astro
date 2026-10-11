@@ -13,7 +13,7 @@ const { num, title, band = false } = Astro.props;
 
 <section class:list={['cs', band && 'cs--band']} aria-label={title}>
   <div class="container split">
-    <div class="split__head">
+    <div class="split__head" data-reveal="fade">
       <p class="t-mono">{num}</p>
       <h2 class="t-h2">{title}</h2>
     </div>

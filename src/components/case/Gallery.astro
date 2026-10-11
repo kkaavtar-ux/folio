@@ -40,7 +40,7 @@ const sizesFor = (n: number, mobile: string) => {
             return (
               <ul class:list={['gal__row', `gal__row--${row.mobile ?? (row.items.length > 2 ? 'carousel' : row.items.length === 2 ? 'grid' : 'stack')}`]} role="list" style={`--n:${n}`} data-carousel={(row.mobile ?? (row.items.length > 2 ? 'carousel' : 'x')) === 'carousel' ? '' : undefined}>
                 {row.items.map((it) => (
-                  <li class="gal__item">
+                  <li class="gal__item" data-reveal="fade">
                     <figure>
                       <div
                         class:list={['media gal__media', it.fit === 'contain' && 'gal__media--contain', it.zoom && 'gal__media--zoom']}

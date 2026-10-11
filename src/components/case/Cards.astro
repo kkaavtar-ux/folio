@@ -14,11 +14,11 @@ const { title, items, band = false } = Astro.props;
 
 <section class:list={['cs', band && 'cs--band']} aria-label={title}>
   <div class="container cards">
-    <h2 class="t-h2">{title}</h2>
+    <h2 class="t-h2" data-reveal="fade">{title}</h2>
     <ol class="cards__list" role="list">
       {
         items.map((it) => (
-          <li class="cards__item">
+          <li class="cards__item" data-reveal="fade">
             <p class="t-mono">{it.num}</p>
             <h3 class="t-h3">{it.title}</h3>
             <p class="t-body-s cards__text">{it.text}</p>

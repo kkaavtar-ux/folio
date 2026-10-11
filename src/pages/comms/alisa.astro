@@ -74,7 +74,7 @@ const steps = [
     <ul class="ideas" role="list">
       {
         ideas.map((it) => (
-          <li class="card">
+          <li class="card" data-reveal="fade">
             <p class="t-h1">{it.n}</p>
             <h3 class="t-h3">{it.title}</h3>
             <p class="t-body-s secondary">{it.text}</p>
@@ -89,7 +89,7 @@ const steps = [
     <div class="takes">
       {
         takes.map((t) => (
-          <div class="take">
+          <div class="take" data-reveal="fade">
             <p class="t-mono">{t.label}</p>
             <h3 class="t-h3">{t.title}</h3>
             <p class="t-body-s secondary">{t.text}</p>
@@ -97,7 +97,7 @@ const steps = [
         ))
       }
     </div>
-    <div class="figs">
+    <div class="figs" data-reveal="fade">
       <figure class="fig fig--chart">
         <div class="fig__frame">
           <Img src={researchChart} alt="Line chart: search popularity of “AI anxiety”, “Is AI dangerous?” and “Will AI replace…” from 2018 to 2023, spiking after the ChatGPT launch" width={700} sizes="(max-width: 767px) calc(100vw - 32px), 700px" />
@@ -111,7 +111,7 @@ const steps = [
         <figcaption class="t-mono-s secondary">Fig. 1 — principles of social acceleration</figcaption>
       </figure>
     </div>
-    <div class="insight">
+    <div class="insight" data-reveal="fade">
       <p class="t-mono">INSIGHT</p>
       <p class="t-h3">
         We live in an attention economy where whoever plays by its rules wins. So we can use the first take to answer the second: show AI as a companion that, in the right hands, multiplies performance, quality of life and free time.
@@ -123,7 +123,7 @@ const steps = [
     <p class="t-body">
       My workflow always includes references for every single component of a visual — whether it’s 3D, graphics or UX. This is the overall pool that sets the vibe and aesthetics.
     </p>
-    <div class="refs-wrap">
+    <div class="refs-wrap" data-reveal="fade">
       <ul class="refs" role="list" data-carousel>
         {
           refs.map((r) => (
@@ -145,7 +145,7 @@ const steps = [
     <ol class="steps" role="list">
       {
         steps.map((s) => (
-          <li class="card card--step">
+          <li class="card card--step" data-reveal="fade">
             <p class="t-mono">{s.n}</p>
             <h4 class="t-h3">{s.title}</h4>
             <p class="t-body-s secondary">{s.text}</p>
@@ -153,7 +153,7 @@ const steps = [
         ))
       }
     </ol>
-    <div class="shots-wrap">
+    <div class="shots-wrap" data-reveal="fade">
       <ul class="shots3" role="list" data-carousel>
         {
           [
@@ -170,7 +170,7 @@ const steps = [
       </ul>
       <p class="t-mono-s secondary">Gameplay reference: “Papers, Please” (3909 LLC).</p>
     </div>
-    <blockquote class="quote">
+    <blockquote class="quote" data-reveal="fade">
       <p class="t-h2 quote__title">“AI doesn’t decide anything by itself. The result depends on how you phrase the task.”</p>
       <p class="t-body quote__text">
         At the end — a soft bridge to the product: “now imagine this assistant is always with you.” We don’t teach people how to use AI; we level up their skill to get what they need from it.
@@ -180,7 +180,7 @@ const steps = [
 
   <Split num="06" title="Key visual">
     <p class="t-body">The key visual in three formats for banners and social. The 3D head was modeled and rendered by hand.</p>
-    <div class="kv-wrap">
+    <div class="kv-wrap" data-reveal="fade">
       <div class="kv">
         <div class="kv__col">
           <div class="media kv__square">

@@ -15,7 +15,7 @@ interface Props {
 const { color, count, id, class: className } = Astro.props;
 ---
 
-<div class:list={['section-title', className]}>
+<div class:list={['section-title', className]} data-reveal="blur">
   <Plaque size="l" color={color} as="h2" id={id}><slot /></Plaque>
   {count && <p class="t-mono section-title__count">{count}</p>}
 </div>

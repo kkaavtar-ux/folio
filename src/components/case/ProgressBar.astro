@@ -1,0 +1,32 @@
+---
+/** Case progress bar (BRIEF §4.5): 2px bar fixed at the top in the section color, scroll-linked. */
+interface Props {
+  band: 'product' | '3d' | 'ai' | 'comms';
+}
+const { band } = Astro.props;
+---
+
+<div class:list={['progress', `progress--${band}`]} aria-hidden="true" data-progress></div>
+
+<script>
+  import '../../scripts/progress';
+</script>
+
+<style>
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    pointer-events: none;
+  }
+  .progress--product { background: var(--section-product); }
+  .progress--3d { background: var(--section-3d); }
+  .progress--ai { background: var(--section-ai); }
+  .progress--comms { background: var(--section-comms); }
+  :global(html:not(.js)) .progress { display: none; }
+</style>
