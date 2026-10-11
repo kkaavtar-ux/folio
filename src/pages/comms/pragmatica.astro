@@ -1,0 +1,97 @@
+---
+// 03a Comms case — Pragmatica (Figma 310:1138, mobile 327:915). Copy verbatim from PAGES.md.
+import Case from '../../layouts/Case.astro';
+import BriefConcept from '../../components/case/BriefConcept.astro';
+import Gallery from '../../components/case/Gallery.astro';
+import Cards from '../../components/case/Cards.astro';
+import NextProject from '../../components/case/NextProject.astro';
+
+import pragmatrix3d from '../../assets/images/comms/pragmatica/pragmatrix-3d.webp';
+import salary3d from '../../assets/images/comms/pragmatica/salary-3d.webp';
+import grade3d from '../../assets/images/comms/pragmatica/grade-3d.webp';
+import pragmatrixType from '../../assets/images/comms/pragmatica/pragmatrix-type.webp';
+import salaryType from '../../assets/images/comms/pragmatica/salary-type.webp';
+import gradeType from '../../assets/images/comms/pragmatica/grade-type.webp';
+import alisaKv from '../../assets/images/comms/alisa/kv-1080x1080.webp';
+
+const alt = {
+  pragmatrix3d: 'Pragmatrix cover, 3D: a pink game controller on deep blue',
+  salary3d: 'Salary calculator cover, 3D: a white pump bottle on green',
+  grade3d: 'Grade detector cover, 3D: an X-rayed glass ribcage',
+  pragmatrixType: 'Pragmatrix cover, type-only: torn green lettering on blue',
+  salaryType: 'Salary calculator cover, type-only: a pink water meter on pale blue',
+  gradeType: 'Grade detector cover, type-only: a red pixelated stick with labels',
+};
+---
+
+<Case
+  section="comms"
+  head={{
+    band: 'comms',
+    tag: 'Comms',
+    no: 'No. 01 · ©2026',
+    all: { label: 'All comms', href: '/comms' },
+    title: 'Pragmatica',
+    lead: 'Key visuals for tests in a Telegram bot',
+    meta: [
+      { label: 'CLIENT', value: 'Pragmatica' },
+      { label: 'ROLE', value: 'Key visuals, 3D, typography' },
+      { label: 'YEAR', value: '2026' },
+      { label: 'FORMATS', value: '1080×1080 · bot + social' },
+    ],
+  }}
+>
+  <BriefConcept
+    brief="Three covers for tests inside a Telegram bot, used in the bot and in social announcements. The task: reveal what each test is about and offer a new reading — without repeating the current style."
+    concept="Every test gets its own object as a metaphor: a game controller for the career quest, an X-rayed ribcage for the grade detector, a pump bottle for the salary calculator. Loud type and print-like labels turn each cover into a poster. A second, type-only direction keeps the same ideas without 3D."
+  />
+
+  <Gallery
+    label="Image sequence"
+    groups={[
+      {
+        label: '01 · WITH 3D',
+        rows: [{ ratio: 1, items: [
+          { image: pragmatrix3d, alt: alt.pragmatrix3d },
+          { image: salary3d, alt: alt.salary3d },
+          { image: grade3d, alt: alt.grade3d },
+        ] }],
+      },
+      {
+        label: '02 · SAME IDEA, TWO DIRECTIONS',
+        rows: [{ ratio: 1, items: [
+          { image: grade3d, alt: alt.grade3d },
+          { image: gradeType, alt: alt.gradeType },
+        ] }],
+      },
+      {
+        label: '03 · TYPE-ONLY',
+        rows: [{ ratio: 1, items: [
+          { image: pragmatrixType, alt: alt.pragmatrixType },
+          { image: salaryType, alt: alt.salaryType },
+          { image: gradeType, alt: alt.gradeType },
+        ] }],
+      },
+    ]}
+  />
+
+  <Cards
+    band
+    title="Three tests, three objects"
+    items={[
+      { num: '01', title: 'Pragmatrix', text: 'A quest-simulation about the product designer’s path: UX patterns, work traps and survival-game elements.' },
+      { num: '02', title: 'Grade detector', text: 'Defines the professional level of product and UX designers — because self-esteem and the market think differently.' },
+      { num: '03', title: 'Salary calculator', text: 'An interactive calculator based on real vacancies, with an ironic, interview-style flow: not what you want, but what they pay.' },
+    ]}
+  />
+
+  <NextProject
+    label="NEXT · 02 / 02"
+    title="Alisa AI · Yandex Drops"
+    lead="Special project: concept, key visual, mini-game"
+    href="/comms/alisa"
+    band="comms"
+    image={alisaKv}
+    thumb={{ w: 320, h: 320 }}
+  />
+</Case>

@@ -1,0 +1,121 @@
+---
+/**
+ * Gallery — case image sequences: groups of [mono label · optional body] + rows of equal tiles.
+ * Desktop: each row is an n-column grid (gap 16). Mobile per row: carousel / 2-col grid / stack.
+ */
+import Img from '../Img.astro';
+import type { GGroup } from './types';
+
+interface Props {
+  groups: GGroup[];
+  /** Grey band behind the section. */
+  band?: boolean;
+  /** Hero visuals sit 32px under the case head with no label. */
+  hero?: boolean;
+  label?: string;
+}
+
+const { groups, band = false, hero = false, label = 'Gallery' } = Astro.props;
+
+const sizesFor = (n: number, mobile: string) => {
+  const m = mobile === 'carousel' ? '280px' : mobile === 'grid' ? 'calc((100vw - 44px) / 2)' : 'calc(100vw - 32px)';
+  return `(max-width: 767px) ${m}, (max-width: 1440px) calc((100vw - 64px - ${(n - 1) * 16}px) / ${n}), ${Math.round((1376 - (n - 1) * 16) / n)}px`;
+};
+---
+
+<section class:list={['cs', 'gal', band && 'cs--band', hero && 'gal--hero']} aria-label={label}>
+  <div class="container gal__inner">
+    {
+      groups.map((g) => (
+        <div class="gal__group">
+          {(g.label || g.text) && (
+            <div class="gal__head">
+              {g.label && <h2 class="t-mono">{g.label}</h2>}
+              {g.text && <p class="t-body">{g.text}</p>}
+            </div>
+          )}
+          {g.rows.map((row) => {
+            const n = row.cols ?? row.items.length;
+            const w = Math.round((1376 - (n - 1) * 16) / n);
+            return (
+              <ul class:list={['gal__row', `gal__row--${row.mobile ?? (row.items.length > 2 ? 'carousel' : row.items.length === 2 ? 'grid' : 'stack')}`]} role="list" style={`--n:${n}`}>
+                {row.items.map((it) => (
+                  <li class="gal__item">
+                    <figure>
+                      <div
+                        class:list={['media gal__media', it.fit === 'contain' && 'gal__media--contain', it.zoom && 'gal__media--zoom']}
+                        style={`--r:${row.ratio ?? it.image.width / it.image.height}; ${it.zoom ? `--z:${it.zoom};` : ''}`}
+                      >
+                        <Img src={it.image} alt={it.alt} width={w} extraWidths={[280, 358]} sizes={sizesFor(n, row.mobile ?? (row.items.length > 2 ? 'carousel' : row.items.length === 2 ? 'grid' : 'stack'))} />
+                      </div>
+                      {(it.title || it.text) && (
+                        <figcaption class="gal__cap">
+                          {it.title && <span class="t-label">{it.title}</span>}
+                          {it.text && <span class="t-body-s gal__text">{it.text}</span>}
+                        </figcaption>
+                      )}
+                      {it.caption && <figcaption class="t-mono-s gal__mono">{it.caption}</figcaption>}
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            );
+          })}
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .gal__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+  .gal__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .gal__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .gal__row {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+    align-items: start;
+  }
+  .gal__media { aspect-ratio: var(--r); }
+  .gal__media--contain :global(img) { object-fit: contain; }
+  .gal__media--zoom :global(img) { transform: scale(var(--z)); }
+  .gal__cap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    margin-top: var(--space-8);
+  }
+  .gal__text { color: var(--text-secondary); }
+  .gal__mono { margin-top: var(--space-8); color: var(--text-secondary); }
+
+  @media (max-width: 767px) {
+    .gal__inner { gap: var(--space-24); }
+    .gal__group { gap: var(--space-12); }
+    .gal__row--grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gal__row--stack { grid-template-columns: 1fr; }
+    .gal__row--carousel {
+      display: flex;
+      gap: var(--space-12);
+      margin-right: calc(-1 * var(--layout-gutter));
+      padding-right: var(--layout-gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .gal__row--carousel::-webkit-scrollbar { display: none; }
+    .gal__row--carousel .gal__item { flex: none; width: 280px; scroll-snap-align: start; }
+  }
+</style>

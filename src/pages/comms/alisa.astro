@@ -1,0 +1,359 @@
+---
+// 03b Comms case — Alisa AI · Yandex Drops (Figma 317:1223, mobile 327:1467). Copy verbatim from PAGES.md.
+import Case from '../../layouts/Case.astro';
+import Gallery from '../../components/case/Gallery.astro';
+import Split from '../../components/case/Split.astro';
+import Img from '../../components/Img.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import type { ImageMetadata } from 'astro';
+
+import kvWide from '../../assets/images/comms/alisa/kv-1920x1080.webp';
+import kvSquare from '../../assets/images/comms/alisa/kv-1080x1080.webp';
+import kvTall from '../../assets/images/comms/alisa/kv-1080x1920.webp';
+import head3d from '../../assets/images/comms/alisa/head-3d.webp';
+import researchChart from '../../assets/images/comms/alisa/research-chart.webp';
+import accelCycle from '../../assets/images/comms/alisa/ref-01.webp';
+import mech1 from '../../assets/images/comms/alisa/mechanics-1.webp';
+import mech2 from '../../assets/images/comms/alisa/mechanics-2.webp';
+import mech3 from '../../assets/images/comms/alisa/mechanics-3.webp';
+import pragmatrix3d from '../../assets/images/comms/pragmatica/pragmatrix-3d.webp';
+
+// Reference pool: third-party posters, shown small (≤220px) — Figma shows 12.
+const refFiles = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/comms/alisa/ref-*.webp', { eager: true });
+const refs = Object.keys(refFiles)
+  .sort()
+  .filter((p) => !p.endsWith('ref-01.webp'))
+  .slice(0, 12)
+  .map((p, i) => ({ image: refFiles[p].default, alt: `Reference poster ${i + 1} by another author` }));
+
+const ideas = [
+  { n: '1', title: 'Technology first', text: 'The main selling point: the first smart earbuds with built-in AI. We sell a gadget, but the focus is on the technology.' },
+  { n: '2', title: 'Human × AI', text: 'The core idea of the whole project is a synthesis of artificial intelligence and a person.' },
+  { n: '3', title: 'A companion, not a rival', text: 'AI is not here to replace people or take their jobs — it takes part of the load off our workflow and automates routine.' },
+  { n: '4', title: 'Experimental aesthetics', text: 'To say it, we use experimental design: high contrast, play with typography, a bit of absurdity.' },
+];
+
+const takes = [
+  { label: 'TAKE 01', title: 'AI anxiety', text: 'Every year the level of anxiety grows as AI becomes more present in our lives — searches for “fear of AI”, “is AI dangerous?” and “will AI replace…” keep climbing.' },
+  { label: 'TAKE 02', title: 'Social acceleration', text: 'The pace of life, especially in big cities, has sped up to an insane level: digitalization, social media and algorithms reward short-paced content with endless cuts and oversaturated visuals.' },
+];
+
+const steps = [
+  { n: '01', title: 'Understand', text: 'Figure out what the person really wants.' },
+  { n: '02', title: 'Reformulate', text: 'Not just answer — rewrite the request, add specifics and a detailed description of the task.' },
+  { n: '03', title: 'Get the most', text: 'Turn a vague ask into the result that brings maximum value.' },
+];
+---
+
+<Case
+  section="comms"
+  head={{
+    band: 'comms',
+    tag: 'Comms',
+    no: 'No. 02 · ©2026',
+    all: { label: 'All comms', href: '/comms' },
+    title: 'Yandex Drops',
+    lead: 'A special project for the first earbuds with Alisa AI inside',
+    meta: [
+      { label: 'CLIENT', value: 'Alisa AI · test task' },
+      { label: 'ROLE', value: 'Concept, research, KV, 3D' },
+      { label: 'YEAR', value: '2026' },
+      { label: 'DELIVERABLES', value: 'Key visual in 3 formats, concept, mini-game landing idea' },
+    ],
+  }}
+>
+  <Gallery hero label="Hero" groups={[{ rows: [{ items: [{ image: kvWide, alt: 'Yandex Drops key visual, 1920×1080: glossy coral 3D head over giant pink type on navy' }] }] }]} />
+
+  <Split num="01" title="Brief">
+    <p class="t-lead">
+      Alisa announced a new device with Alisa AI inside. For the launch we needed a noticeable, viral special project: a bold idea of how to show the device to potential users — mechanics and creative concept were open to any experiment.
+    </p>
+  </Split>
+
+  <Split num="02" title="Big idea" band>
+    <ul class="ideas" role="list">
+      {
+        ideas.map((it) => (
+          <li class="card">
+            <p class="t-h1">{it.n}</p>
+            <h3 class="t-h3">{it.title}</h3>
+            <p class="t-body-s secondary">{it.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Split>
+
+  <Split num="03" title="Research">
+    <p class="t-lead">The concept stands on two takes.</p>
+    <div class="takes">
+      {
+        takes.map((t) => (
+          <div class="take">
+            <p class="t-mono">{t.label}</p>
+            <h3 class="t-h3">{t.title}</h3>
+            <p class="t-body-s secondary">{t.text}</p>
+          </div>
+        ))
+      }
+    </div>
+    <div class="figs">
+      <figure class="fig fig--chart">
+        <div class="fig__frame">
+          <Img src={researchChart} alt="Line chart: search popularity of “AI anxiety”, “Is AI dangerous?” and “Will AI replace…” from 2018 to 2023, spiking after the ChatGPT launch" width={700} sizes="(max-width: 767px) calc(100vw - 32px), 700px" />
+        </div>
+        <figcaption class="t-mono-s secondary">Fig. 2 — search volume for “fear of AI”, “is AI dangerous?”, “will AI replace…”</figcaption>
+      </figure>
+      <figure class="fig fig--cycle">
+        <div class="fig__frame">
+          <Img src={accelCycle} alt="Diagram of the acceleration cycle: technological acceleration, acceleration of social change and of the pace of life" width={243} sizes="243px" />
+        </div>
+        <figcaption class="t-mono-s secondary">Fig. 1 — principles of social acceleration</figcaption>
+      </figure>
+    </div>
+    <div class="insight">
+      <p class="t-mono">INSIGHT</p>
+      <p class="t-h3">
+        We live in an attention economy where whoever plays by its rules wins. So we can use the first take to answer the second: show AI as a companion that, in the right hands, multiplies performance, quality of life and free time.
+      </p>
+    </div>
+  </Split>
+
+  <Split num="04" title="References">
+    <p class="t-body">
+      My workflow always includes references for every single component of a visual — whether it’s 3D, graphics or UX. This is the overall pool that sets the vibe and aesthetics.
+    </p>
+    <div class="refs-wrap">
+      <ul class="refs" role="list">
+        {
+          refs.map((r) => (
+            <li class="media refs__tile">
+              <Img src={r.image} alt={r.alt} width={163} sizes="163px" />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="t-mono-s secondary">Reference pool — works by other authors, used for mood only.</p>
+    </div>
+  </Split>
+
+  <Split num="05" title="Mechanics" band>
+    <div class="mech-head">
+      <h3 class="t-h3">Landing mini-game in the spirit of “Papers, Please”</h3>
+      <p class="t-body">The concept is simple: you are an Alisa AI operator, and people’s requests to the AI pass through you.</p>
+    </div>
+    <ol class="steps" role="list">
+      {
+        steps.map((s) => (
+          <li class="card card--step">
+            <p class="t-mono">{s.n}</p>
+            <h4 class="t-h3">{s.title}</h4>
+            <p class="t-body-s secondary">{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="shots-wrap">
+      <ul class="shots3" role="list">
+        {
+          [
+            // Figma order: title screen, gameplay, labor lottery (= mechanics-3, -2, -1).
+            { image: mech3, alt: '“Papers, Please” title screen' },
+            { image: mech2, alt: '“Papers, Please” gameplay: inspecting documents at the border booth' },
+            { image: mech1, alt: '“Papers, Please” labor lottery screen' },
+          ].map((m) => (
+            <li class="media shots3__tile">
+              <Img src={m.image} alt={m.alt} width={332} extraWidths={[280]} sizes="(max-width: 767px) 280px, 332px" />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="t-mono-s secondary">Gameplay reference: “Papers, Please” (3909 LLC).</p>
+    </div>
+    <blockquote class="quote">
+      <p class="t-h2 quote__title">“AI doesn’t decide anything by itself. The result depends on how you phrase the task.”</p>
+      <p class="t-body quote__text">
+        At the end — a soft bridge to the product: “now imagine this assistant is always with you.” We don’t teach people how to use AI; we level up their skill to get what they need from it.
+      </p>
+    </blockquote>
+  </Split>
+
+  <Split num="06" title="Key visual">
+    <p class="t-body">The key visual in three formats for banners and social. The 3D head was modeled and rendered by hand.</p>
+    <div class="kv-wrap">
+      <div class="kv">
+        <div class="kv__col">
+          <div class="media kv__square">
+            <Img src={kvSquare} alt="Key visual, 1080×1080" width={440} extraWidths={[358]} sizes="(max-width: 767px) calc(100vw - 32px), 440px" />
+          </div>
+          <div class="media kv__head">
+            <Img src={head3d} alt="The 3D head rendered on its own" width={440} extraWidths={[358]} sizes="(max-width: 767px) calc(100vw - 32px), 440px" />
+          </div>
+        </div>
+        <div class="media kv__tall">
+          <Img src={kvTall} alt="Key visual, 1080×1920" width={572} extraWidths={[358]} sizes="(max-width: 767px) calc(100vw - 32px), 572px" />
+        </div>
+      </div>
+      <p class="t-mono-s secondary">1080×1080 · 3D head · 1080×1920</p>
+    </div>
+  </Split>
+
+  <NextProject
+    label="NEXT · 01 / 02"
+    title="Pragmatica"
+    lead="Key visuals for tests in a Telegram bot"
+    href="/comms/pragmatica"
+    band="comms"
+    image={pragmatrix3d}
+    thumb={{ w: 300, h: 300 }}
+  />
+</Case>
+
+<style>
+  .secondary { color: var(--text-secondary); }
+
+  /* White cards on the grey bands (Big idea, Mechanics steps). */
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: var(--space-24);
+    background: var(--bg-page);
+    border-radius: var(--radius-base);
+  }
+  .ideas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+    align-items: start;
+  }
+  .ideas .card:last-child { grid-column: 1 / -1; }
+
+  .takes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .take {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--line-default);
+  }
+
+  .figs {
+    display: grid;
+    grid-template-columns: 709fr 303fr;
+    gap: var(--layout-grid-gap);
+  }
+  .fig {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .fig__frame {
+    display: grid;
+    place-items: center;
+    height: 342px;
+    padding: var(--space-8);
+    background: var(--bg-page);
+    border: 1px solid var(--line-default);
+    border-radius: var(--radius-base);
+    overflow: hidden;
+  }
+  .fig__frame :global(img) { max-height: 100%; width: auto; }
+
+  .insight {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: var(--space-24);
+    background: var(--section-comms);
+    border-radius: var(--radius-base);
+  }
+
+  .refs-wrap,
+  .shots-wrap,
+  .kv-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+  .refs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 163px);
+    gap: var(--layout-grid-gap);
+  }
+  .refs__tile { aspect-ratio: 163 / 218; }
+
+  .mech-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+    align-items: start;
+  }
+  .card--step { padding: 20px; }
+  .shots3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .shots3__tile { aspect-ratio: 332 / 192; background: var(--surface-inverse); }
+  .shots3__tile :global(img) { object-fit: contain; }
+
+  .quote {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding: var(--space-24);
+    background: var(--surface-inverse);
+    border-radius: var(--radius-base);
+  }
+  .quote__title { color: var(--section-comms); }
+  .quote__text { color: var(--color-grey); }
+
+  .kv {
+    display: grid;
+    grid-template-columns: 440fr 572fr;
+    gap: var(--layout-grid-gap);
+    align-items: start;
+  }
+  .kv__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-grid-gap);
+  }
+  .kv__square { aspect-ratio: 1; }
+  .kv__head { aspect-ratio: 440 / 500; }
+  .kv__head :global(img) { object-fit: contain; }
+  .kv__tall { aspect-ratio: 1080 / 1920; }
+
+  @media (max-width: 767px) {
+    .ideas,
+    .takes,
+    .steps,
+    .figs,
+    .kv { grid-template-columns: 1fr; }
+    .refs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+    .fig__frame { height: auto; }
+    .shots3 {
+      display: flex;
+      gap: var(--space-12);
+      margin-right: calc(-1 * var(--layout-gutter));
+      padding-right: var(--layout-gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .shots3__tile { flex: none; width: 280px; scroll-snap-align: start; }
+    .refs-wrap,
+    .shots-wrap,
+    .kv-wrap { gap: var(--space-16); }
+  }
+</style>

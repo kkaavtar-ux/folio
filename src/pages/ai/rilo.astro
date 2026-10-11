@@ -1,0 +1,76 @@
+---
+// 04c AI case — Rilo (Figma 315:1499, mobile 327:2574).
+import Case from '../../layouts/Case.astro';
+import BriefConcept from '../../components/case/BriefConcept.astro';
+import Gallery from '../../components/case/Gallery.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import type { ImageMetadata } from 'astro';
+
+import torii from '../../assets/images/3d/icon-set/torii.webp';
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/ai/rilo/*.webp', { eager: true });
+const r = (name: string, alt: string) => ({ image: files[`../../assets/images/ai/rilo/${name}.webp`].default, alt });
+const pad = (i: number) => String(i).padStart(2, '0');
+
+const poses = [r('hero-pose', 'Rilo, hero pose'), ...Array.from({ length: 11 }, (_, i) => r(`pose-${pad(i + 1)}`, `Rilo, pose ${i + 2}`))];
+const scenes = Array.from({ length: 12 }, (_, i) => r(`scene-${pad(i + 1)}`, `Rilo story scene ${i + 1}`));
+---
+
+<Case
+  section="ai"
+  head={{
+    band: 'ai',
+    tag: 'AI',
+    no: 'No. 03 · ©2026',
+    all: { label: 'All AI', href: '/ai' },
+    title: 'Rilo',
+    lead: 'Brand mascot: character sheet, poses, story scenes',
+    meta: [
+      { label: 'TYPE', value: 'AI character system' },
+      { label: 'ROLE', value: 'Character design, AI pipeline' },
+      { label: 'YEAR', value: '2026' },
+      { label: 'BRAND', value: 'NOXIS' },
+    ],
+  }}
+>
+  <Gallery hero label="Hero" groups={[{ rows: [{ ratio: 1, mobile: 'grid', items: [
+    r('hero-pose', 'Rilo, a fennec-fox robot mascot in a cream armored suit'),
+    r('character-sheet', 'Rilo character sheet, cropped'),
+  ] }] }]} />
+
+  <BriefConcept
+    brief="Create a brand mascot and take it from a single art to a working system: a character sheet with projections and emotions, a pose library for future communication, and story scenes with sets — a character that scales to any next brand task and stays recognizable in every new frame."
+    concept="Rilo is a fennec-fox robotic collectible in a cream-white armored suit — the NOXIS product language on a character. Built as a system, not a single picture: the sheet comes first and becomes the reference for every pose and scene after it."
+  />
+
+  <Gallery
+    label="Image sequence"
+    groups={[
+      {
+        label: '01 · CHARACTER SHEET',
+        rows: [
+          { items: [r('character-sheet', 'Rilo character sheet: front, three-quarter, side and back views')] },
+          { items: [r('emotions', 'Rilo emotions sheet')] },
+        ],
+      },
+      {
+        label: '02 · POSE LIBRARY',
+        rows: [{ ratio: 1, cols: 4, mobile: 'carousel', items: poses }],
+      },
+      {
+        label: '03 · STORY SCENES',
+        rows: [{ ratio: 448 / 332, cols: 3, mobile: 'carousel', items: scenes }],
+      },
+    ]}
+  />
+
+  <NextProject
+    label="NEXT · SECTION"
+    title="3D"
+    lead="Renders, icon sets and key visuals"
+    href="/3d"
+    band="3d"
+    image={torii}
+    thumb={{ w: 300, h: 300 }}
+  />
+</Case>

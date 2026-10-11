@@ -1,0 +1,152 @@
+---
+// 04b AI case — NOXIS (Figma 315:1189, mobile 327:2258). Frames mapped from the desktop screenshots.
+import Case from '../../layouts/Case.astro';
+import BriefConcept from '../../components/case/BriefConcept.astro';
+import Gallery from '../../components/case/Gallery.astro';
+import Cards from '../../components/case/Cards.astro';
+import Img from '../../components/Img.astro';
+import NextProject from '../../components/case/NextProject.astro';
+import type { ImageMetadata } from 'astro';
+
+import riloHeroPose from '../../assets/images/ai/rilo/hero-pose.webp';
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/ai/noxis/*.webp', { eager: true });
+const n = (name: string, alt: string) => ({ image: files[`../../assets/images/ai/noxis/${name}.webp`].default, alt });
+const R = 1918 / 1068;
+
+const rejected = [
+  n('product-14', 'Rejected: NOXIS pattern poster with the hooded figure'),
+  n('billboard-1', 'Rejected: city billboard at night'),
+  n('package-1', 'Rejected: vacuum package in a dark city'),
+  n('social-media-1', 'Rejected: tablet device in a dark workshop'),
+];
+---
+
+<Case
+  section="ai"
+  head={{
+    band: 'ai',
+    tag: 'AI',
+    no: 'No. 02 · ©2026',
+    all: { label: 'All AI', href: '/ai' },
+    title: 'NOXIS',
+    lead: 'A brand from scratch: identity, product, campaign',
+    meta: [
+      { label: 'TYPE', value: 'AI brand world' },
+      { label: 'ROLE', value: 'Concept, identity, art direction' },
+      { label: 'YEAR', value: '2026' },
+      { label: 'CONTEXT', value: 'AI Upgrade · Wannabe' },
+    ],
+  }}
+>
+  <Gallery hero label="Hero" groups={[{ rows: [{ items: [n('product-10', 'NOXIS line-up: armor, parka, puffer and case behind the logo')] }] }]} />
+
+  <BriefConcept
+    brief="Invent a fictional brand end to end — name, product category, visual language — and take it to a full brand book and a promo campaign with locations, models and a little storytelling. No source product or landing to mix from: the whole world was built from zero."
+    concept="NOXIS makes gear for extreme environments. Its product language — V-01 SHROUD — is matte technical textile, hidden seams and optical details, carried in a cream-white palette from product to billboard. AI drove both the identity and the campaign production: models, sets, light and framing."
+  />
+
+  <Gallery
+    label="Image sequence"
+    groups={[
+      {
+        label: '01 · IDENTITY & SYSTEM',
+        rows: [{ ratio: R, items: [
+          n('product-11', 'NOXIS pattern poster with the hooded V-01 figure'),
+          n('pattern', 'Model in the cream V-01 jacket, studio portrait'),
+        ] }],
+      },
+      {
+        label: '02 · PRODUCT',
+        rows: [
+          { ratio: R, items: [n('product-12', 'NOXIS logo on black')] },
+          { ratio: R, items: [
+            n('product-shot', 'V-01 jacket boxed on stones in a desert village'),
+            n('product-16', 'Hooded V-01 jacket in the desert'),
+          ] },
+        ],
+      },
+      {
+        label: '03 · CAMPAIGN',
+        rows: [
+          { ratio: R, items: [n('billboard', 'Model in a cream NOXIS coat walking through a desert town')] },
+          { ratio: R, items: [
+            n('city-banner', 'Close-up: model fastening the V-01 SHROUD collar'),
+            n('social-media', 'NOXIS box on a market stall'),
+          ] },
+        ],
+      },
+      {
+        label: '04 · TOUCHPOINTS',
+        rows: [
+          { ratio: R, items: [
+            n('package', 'NOXIS poster in a cantina'),
+            n('merch', 'NOXIS billboard in a desert alley'),
+            n('web', 'NOXIS type specification table'),
+          ] },
+          { ratio: R, items: [
+            n('web-1', 'NOXIS app on a phone in a cantina'),
+            n('web-2', 'Model in the V-01 coat standing in the desert'),
+          ] },
+        ],
+      },
+    ]}
+  />
+
+  <Cards
+    band
+    title="Process"
+    items={[
+      { num: '01', title: 'Name & category', text: 'A name and a product category that can carry a whole world.' },
+      { num: '02', title: 'Visual language', text: 'Logo, type, pattern and palette — then tested on product and touchpoints.' },
+      { num: '03', title: 'Campaign production', text: 'Locations, models, light and framing produced with AI and art-directed frame by frame.' },
+    ]}
+  >
+    <div class="rejected">
+      <h3 class="t-mono">REJECTED DIRECTIONS</h3>
+      <ul class="rejected__row" role="list">
+        {rejected.map((r) => (
+          <li class="media rejected__tile">
+            <Img src={r.image} alt={r.alt} width={332} extraWidths={[280]} sizes="(max-width: 767px) 280px, (max-width: 1440px) 23vw, 332px" />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Cards>
+
+  <NextProject
+    label="NEXT · 03 / 03"
+    title="Rilo · brand mascot"
+    lead="Character sheet, poses, story scenes"
+    href="/ai/rilo"
+    band="ai"
+    image={riloHeroPose}
+    thumb={{ w: 300, h: 300 }}
+  />
+</Case>
+
+<style>
+  .rejected {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .rejected__row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .rejected__tile { aspect-ratio: 1918 / 1068; }
+  @media (max-width: 767px) {
+    .rejected__row {
+      display: flex;
+      gap: var(--space-12);
+      margin-right: calc(-1 * var(--layout-gutter));
+      padding-right: var(--layout-gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .rejected__tile { flex: none; width: 280px; scroll-snap-align: start; }
+  }
+</style>

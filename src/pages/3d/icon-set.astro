@@ -1,0 +1,90 @@
+---
+// 05b 3D case — Bunpro icon set (Figma 318:1472, mobile 327:2977).
+import Case from '../../layouts/Case.astro';
+import BriefConcept from '../../components/case/BriefConcept.astro';
+import Gallery from '../../components/case/Gallery.astro';
+import SetGrid from '../../components/case/SetGrid.astro';
+import NextProject from '../../components/case/NextProject.astro';
+
+import torii from '../../assets/images/3d/icon-set/torii.webp';
+import bear from '../../assets/images/3d/icon-set/bear.webp';
+import kanji from '../../assets/images/3d/icon-set/kanji.webp';
+import lantern from '../../assets/images/3d/icon-set/lantern.webp';
+import flower from '../../assets/images/3d/icon-set/flower.webp';
+import onigiri from '../../assets/images/3d/icon-set/onigiri.webp';
+import omamori from '../../assets/images/3d/icon-set/omamori.webp';
+import lanternRound from '../../assets/images/3d/icon-set/lantern-round.webp';
+import cloud from '../../assets/images/3d/icon-set/cloud.webp';
+import kvFinal from '../../assets/images/3d/key-visual/final.webp';
+
+const icon = (name: string) => `Knitted pink ${name} icon tied with white rope`;
+---
+
+<Case
+  section="3d"
+  head={{
+    band: '3d',
+    tag: '3D',
+    no: 'No. 02 · ©2025',
+    all: { label: 'All 3D', href: '/3d' },
+    title: 'Bunpro icon set',
+    lead: '3D icons for banners and ads of a Japanese-learning platform',
+    meta: [
+      { label: 'TYPE', value: '3D icon set' },
+      { label: 'ROLE', value: 'Modeling, shading, render' },
+      { label: 'COUNT', value: '9 icons · 1024×1024' },
+      { label: 'TOOLS', value: 'Cinema 4D · Redshift' },
+    ],
+  }}
+>
+  <Gallery hero label="Hero" groups={[{ rows: [{ ratio: 1, mobile: 'grid', items: [
+    { image: torii, alt: icon('torii gate') },
+    { image: bear, alt: icon('bear') },
+  ] }] }]} />
+
+  <BriefConcept
+    brief="Model and shade an icon pack for banners, ads and other promo materials. The theme is Bunpro, a resource for learning Japanese — hence the geometry and motifs."
+    concept="Every icon is a Japanese motif — a torii gate, a kanji, a lantern, sakura, a bear, onigiri, an omamori — knitted from pink yarn and tied with white rope. The soft, tactile material makes a serious subject feel friendly; one material and one light setup hold the whole set together."
+  />
+
+  <section class="cs" aria-label="The set">
+    <div class="container">
+      <SetGrid
+        label="01 · THE SET"
+        big={{ image: torii, alt: icon('torii gate') }}
+        small={[
+          { image: kanji, alt: icon('kanji') },
+          { image: lantern, alt: icon('lantern') },
+          { image: flower, alt: icon('sakura flower') },
+          { image: bear, alt: icon('bear') },
+          { image: onigiri, alt: icon('onigiri') },
+          { image: omamori, alt: icon('omamori') },
+          { image: lanternRound, alt: icon('round lantern') },
+          { image: cloud, alt: icon('cloud') },
+        ]}
+      />
+    </div>
+  </section>
+
+  <Gallery
+    label="Material close-ups"
+    groups={[{
+      label: '02 · MATERIAL CLOSE-UPS',
+      rows: [{ ratio: 1, items: [
+        { image: flower, alt: 'Close-up of the knitted sakura flower and rope', zoom: 1.8 },
+        { image: lanternRound, alt: 'Close-up of the knitted round lantern', zoom: 1.8 },
+        { image: kanji, alt: 'Close-up of the knitted kanji', zoom: 1.8 },
+      ] }],
+    }]}
+  />
+
+  <NextProject
+    label="NEXT · 03 / 03"
+    title="Bunpro · key visual"
+    lead="The icon language scaled into one scene"
+    href="/3d/key-visual"
+    band="3d"
+    image={kvFinal}
+    thumb={{ w: 400, h: 300 }}
+  />
+</Case>

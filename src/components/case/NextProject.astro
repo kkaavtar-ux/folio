@@ -1,0 +1,75 @@
+---
+/**
+ * NextProject — rounded band in the NEXT item's section color (Figma e.g. 310:1596):
+ * pad 48, mono "NEXT · 02 / 02", H1 title →, lead; thumb on the right. Whole block is the link.
+ * Mobile: stacked, thumb full width under the text.
+ */
+import Img from '../Img.astro';
+import Arrow from '../Arrow.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  label: string;
+  title: string;
+  lead: string;
+  href: string;
+  band: 'product' | '3d' | 'ai' | 'comms';
+  image: ImageMetadata;
+  /** Thumb size on desktop (Figma: 300×300, 320×320, 400×300 or 480×300). */
+  thumb: { w: number; h: number };
+}
+
+const { label, title, lead, href, band, image, thumb } = Astro.props;
+---
+
+<section class="cs np-wrap" aria-label="Next project">
+  <div class="container">
+    <a class:list={['np', `np--${band}`]} href={href}>
+      <div class="np__text">
+        <p class="t-mono">{label}</p>
+        <p class="t-h1 np__title">{title} <Arrow /></p>
+        <p class="t-lead">{lead}</p>
+      </div>
+      <div class="media np__thumb" style={`--tw:${thumb.w}px; --tr:${thumb.w / thumb.h}`}>
+        <Img src={image} alt="" width={thumb.w} extraWidths={[358]} sizes={`(max-width: 767px) calc(100vw - 72px), ${thumb.w}px`} />
+      </div>
+    </a>
+  </div>
+</section>
+
+<style>
+  .np {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-48);
+    padding: var(--space-48);
+    border-radius: var(--radius-base);
+  }
+  .np--product { background: var(--section-product); }
+  .np--3d { background: var(--section-3d); }
+  .np--ai { background: var(--section-ai); }
+  .np--comms { background: var(--section-comms); }
+
+  .np__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .np__title { white-space: normal; }
+  .np__thumb {
+    flex: none;
+    width: var(--tw);
+    aspect-ratio: var(--tr);
+  }
+
+  @media (max-width: 767px) {
+    .np {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-24);
+      padding: 20px;
+    }
+    .np__thumb { width: 100%; aspect-ratio: 1; }
+  }
+</style>

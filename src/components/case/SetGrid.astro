@@ -1,0 +1,59 @@
+---
+/**
+ * SetGrid — one big tile (448) + 8 small tiles (216, 4×2) — Icon Pack sets and Bunpro "THE SET".
+ * Figma: 314:1195 / 318:1527. Mobile: big tile full width, smalls in a 4-column grid.
+ */
+import Img from '../Img.astro';
+import type { GItem } from './types';
+
+interface Props {
+  label: string;
+  big: GItem;
+  small: GItem[];
+}
+
+const { label, big, small } = Astro.props;
+---
+
+<div class="set">
+  <h2 class="t-mono">{label}</h2>
+  <div class="set__grid">
+    <div class:list={['media set__big', big.fit === 'contain' && 'set__contain']}>
+      <Img src={big.image} alt={big.alt} width={448} extraWidths={[358]} sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1440px) 32vw, 448px" />
+    </div>
+    <ul class="set__small" role="list">
+      {
+        small.map((s) => (
+          <li class="media set__tile">
+            <Img src={s.image} alt={s.alt} width={216} extraWidths={[82]} sizes="(max-width: 767px) calc((100vw - 68px) / 4), (max-width: 1440px) 15vw, 216px" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<style>
+  .set {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .set__grid {
+    display: grid;
+    grid-template-columns: 448fr 912fr;
+    gap: var(--layout-grid-gap);
+  }
+  .set__big { aspect-ratio: 1; }
+  .set__contain :global(img) { object-fit: contain; }
+  .set__small {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .set__tile { aspect-ratio: 1; }
+  @media (max-width: 767px) {
+    .set { gap: var(--space-12); }
+    .set__grid { grid-template-columns: 1fr; }
+  }
+</style>

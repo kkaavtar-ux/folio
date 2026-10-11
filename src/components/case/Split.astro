@@ -1,0 +1,45 @@
+---
+/**
+ * Split — Alisa case sections (Figma 317:1271…): left 300 column with mono number + H2,
+ * right 1028 column with the content. Optional grey band. Mobile: stacked.
+ */
+interface Props {
+  num: string;
+  title: string;
+  band?: boolean;
+}
+const { num, title, band = false } = Astro.props;
+---
+
+<section class:list={['cs', band && 'cs--band']} aria-label={title}>
+  <div class="container split">
+    <div class="split__head">
+      <p class="t-mono">{num}</p>
+      <h2 class="t-h2">{title}</h2>
+    </div>
+    <div class="split__body"><slot /></div>
+  </div>
+</section>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 300fr 1028fr;
+    gap: var(--space-48);
+  }
+  .split__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .split__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+    min-width: 0;
+  }
+  @media (max-width: 767px) {
+    .split { grid-template-columns: 1fr; gap: var(--space-24); }
+    .split__body { gap: var(--space-32); }
+  }
+</style>

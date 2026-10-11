@@ -212,3 +212,4 @@ Rules
 |---|---|---|---|
 | `home/wall-vr-headset.webp` | 1920×1072 | yes | Home wall "AI · VR hero block" (Figma 292:18) |
 | `home/wall-noxis-campaign.webp` | 1376×768 | yes | Home wall "AI · NOXIS campaign" (Figma 292:20) |
+| `comms/alisa/head-3d.webp` | 1024×1024 | yes | Alisa "06 · Key visual" — 3D head on grey tile (Figma 317:1405) |

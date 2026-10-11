@@ -1,0 +1,93 @@
+---
+/**
+ * CaseHead — section-color band (Figma "Project head", e.g. 310:1157):
+ * tag · No. 0N · ©YEAR · ← All <section>  →48→  Display title + Lead  →48→  4 meta columns
+ * (top hairline, mono-s label / label value). Mobile: meta stacks as rows. Pad 72.
+ */
+import Tag from '../Tag.astro';
+import Arrow from '../Arrow.astro';
+import type { PlaqueColor } from '../Plaque.astro';
+
+interface Props {
+  band: 'product' | '3d' | 'ai' | 'comms';
+  tag: string;
+  no: string; // "No. 01 · ©2026"
+  all: { label: string; href: string }; // "All comms"
+  title: string;
+  lead: string;
+  meta: { label: string; value: string }[];
+}
+
+const { band, tag, no, all, title, lead, meta } = Astro.props;
+---
+
+<header class:list={['ch', `ch--${band}`]}>
+  <div class="container ch__inner">
+    <div class="ch__top">
+      <Tag color={'white' as PlaqueColor}>{tag}</Tag>
+      <p class="t-mono">{no}</p>
+      <a class="t-mono link" href={all.href}><Arrow dir="left" /> {all.label}</a>
+    </div>
+    <div class="ch__title">
+      <h1 class="t-display">{title}</h1>
+      <p class="t-lead">{lead}</p>
+    </div>
+    <dl class="ch__meta">
+      {
+        meta.map((m) => (
+          <div>
+            <dt class="t-mono-s">{m.label}</dt>
+            <dd class="t-label">{m.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</header>
+
+<style>
+  .ch { padding-block: var(--layout-section-y); }
+  .ch--product { background: var(--section-product); }
+  .ch--3d { background: var(--section-3d); }
+  .ch--ai { background: var(--section-ai); }
+  .ch--comms { background: var(--section-comms); }
+
+  .ch__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .ch__top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-12);
+  }
+  .ch__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .ch__meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .ch__meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--line-default);
+  }
+
+  @media (max-width: 767px) {
+    .ch__title { gap: var(--space-4); }
+    .ch__meta {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .ch__meta > div { padding-block: var(--space-16); gap: var(--space-4); }
+    .ch__meta > div:last-child { padding-bottom: 0; }
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+/**
+ * Cards — H2 + 3 columns (top hairline, mono number, H3, body-s), e.g. "Three tests, three objects"
+ * (310:1581) and NOXIS "Process". Optional grey band; slot for extras under the columns.
+ */
+interface Props {
+  title: string;
+  items: { num: string; title: string; text: string }[];
+  band?: boolean;
+}
+
+const { title, items, band = false } = Astro.props;
+---
+
+<section class:list={['cs', band && 'cs--band']} aria-label={title}>
+  <div class="container cards">
+    <h2 class="t-h2">{title}</h2>
+    <ol class="cards__list" role="list">
+      {
+        items.map((it) => (
+          <li class="cards__item">
+            <p class="t-mono">{it.num}</p>
+            <h3 class="t-h3">{it.title}</h3>
+            <p class="t-body-s cards__text">{it.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .cards__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .cards__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--line-default);
+  }
+  .cards__text { color: var(--text-secondary); }
+  @media (max-width: 767px) {
+    .cards__list { grid-template-columns: 1fr; gap: var(--space-24); }
+  }
+</style>

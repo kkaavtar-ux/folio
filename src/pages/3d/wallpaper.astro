@@ -1,0 +1,75 @@
+---
+// 05a 3D case — Primitives wallpaper (Figma 318:1365, mobile 327:2864).
+import Case from '../../layouts/Case.astro';
+import BriefConcept from '../../components/case/BriefConcept.astro';
+import Gallery from '../../components/case/Gallery.astro';
+import NextProject from '../../components/case/NextProject.astro';
+
+import final01 from '../../assets/images/3d/wallpaper/final-01.webp';
+import final02 from '../../assets/images/3d/wallpaper/final-02.webp';
+import final03 from '../../assets/images/3d/wallpaper/final-03.webp';
+import rejected01 from '../../assets/images/3d/wallpaper/rejected-01.webp';
+import rejected02 from '../../assets/images/3d/wallpaper/rejected-02.webp';
+import rejected03 from '../../assets/images/3d/wallpaper/rejected-03.webp';
+import rejected04 from '../../assets/images/3d/wallpaper/rejected-04.webp';
+import torii from '../../assets/images/3d/icon-set/torii.webp';
+---
+
+<Case
+  section="3d"
+  head={{
+    band: '3d',
+    tag: '3D',
+    no: 'No. 01 · ©2025',
+    all: { label: 'All 3D', href: '/3d' },
+    title: 'Primitives',
+    lead: 'Abstract wallpapers in the spirit of Windows',
+    meta: [
+      { label: 'TYPE', value: '3D wallpaper' },
+      { label: 'ROLE', value: 'Modeling, shading, render' },
+      { label: 'FORMAT', value: '1920×1072' },
+      { label: 'TOOLS', value: 'Cinema 4D · Redshift' },
+    ],
+  }}
+>
+  <Gallery hero label="Hero" groups={[{ rows: [{ items: [{ image: final01, alt: 'Primitives wallpaper: red, mint and white ribbons flowing through the frame' }] }] }]} />
+
+  <BriefConcept
+    brief="Draw abstract wallpapers in the style of Windows using only basic primitives."
+    concept="Hundreds of thin bent planes stacked into one flowing mass, like a ribbon pulled through the frame. A tight red, mint and white palette and soft studio light keep the chaos calm enough to sit behind desktop icons."
+  />
+
+  <Gallery
+    label="Finals and rejected directions"
+    groups={[
+      {
+        label: '01 · FINALS',
+        rows: [
+          { items: [{ image: final02, alt: 'Primitives wallpaper, final 2' }] },
+          { items: [{ image: final03, alt: 'Primitives wallpaper, final 3' }] },
+        ],
+      },
+      {
+        label: '02 · REJECTED DIRECTIONS',
+        rows: [
+          { ratio: 680 / 380, cols: 2, mobile: 'grid', items: [
+            { image: rejected01, alt: 'Rejected wallpaper direction 1' },
+            { image: rejected02, alt: 'Rejected wallpaper direction 2' },
+            { image: rejected03, alt: 'Rejected wallpaper direction 3' },
+            { image: rejected04, alt: 'Rejected wallpaper direction 4' },
+          ] },
+        ],
+      },
+    ]}
+  />
+
+  <NextProject
+    label="NEXT · 02 / 03"
+    title="Bunpro · icon set"
+    lead="Nine knitted icons for a Japanese-learning platform"
+    href="/3d/icon-set"
+    band="3d"
+    image={torii}
+    thumb={{ w: 400, h: 300 }}
+  />
+</Case>

@@ -1,0 +1,37 @@
+---
+/** BriefConcept — two columns: "Brief" / "( Concept )" mono labels over body text (Figma e.g. 310:1179). */
+interface Props {
+  brief: string;
+  concept: string;
+}
+const { brief, concept } = Astro.props;
+---
+
+<section class="cs bc" aria-label="Brief and concept">
+  <div class="container bc__inner">
+    <div class="bc__col">
+      <h2 class="t-mono">Brief</h2>
+      <p class="t-body">{brief}</p>
+    </div>
+    <div class="bc__col">
+      <h2 class="t-mono">( Concept )</h2>
+      <p class="t-body">{concept}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bc__inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-48);
+  }
+  .bc__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  @media (max-width: 767px) {
+    .bc__inner { grid-template-columns: 1fr; gap: var(--space-32); }
+  }
+</style>

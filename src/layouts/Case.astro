@@ -1,0 +1,20 @@
+---
+/** Case page shell: Base + CaseHead; page content (blocks + NextProject) goes in the slot. */
+import Base from './Base.astro';
+import CaseHead from '../components/case/CaseHead.astro';
+import type { SectionKey } from '../content/site';
+
+type HeadProps = Parameters<typeof CaseHead>[0];
+
+interface Props {
+  section: SectionKey;
+  head: HeadProps;
+}
+
+const { section, head } = Astro.props;
+---
+
+<Base title={`${head.title} — Vanya`} description={head.lead} section={section}>
+  <CaseHead {...head} />
+  <slot />
+</Base>
