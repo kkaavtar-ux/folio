@@ -4,16 +4,18 @@
  * The whole composition scales with its width (container query units), so the same
  * component works full-width on Home, as the Product list thumb and on mobile.
  * Tape: black band, 80px pink stripes every 160px, 120px tall, flush with the bottom.
+ * `tilted` (Product list thumb, Figma 321:1354): 130px tape, 96px stripes, rotated ≈7.75°.
  */
 interface Props {
   caption?: string;
+  tilted?: boolean;
   class?: string;
 }
 
-const { caption = 'TEAM MODE · SALMON — CASE IN PROGRESS', class: className } = Astro.props;
+const { caption = 'TEAM MODE · SALMON — CASE IN PROGRESS', tilted = false, class: className } = Astro.props;
 ---
 
-<div class:list={['uc', className]}>
+<div class:list={['uc', tilted && 'uc--tilted', className]}>
   <div class="uc__box">
     <p class="uc__caption">{caption}</p>
     <p class="uc__title">Under<br />construction</p>
@@ -58,6 +60,22 @@ const { caption = 'TEAM MODE · SALMON — CASE IN PROGRESS', class: className }
       90deg,
       var(--section-product) 0 calc(80 * var(--u)),
       transparent calc(80 * var(--u)) calc(160 * var(--u))
+    );
+  }
+
+  /* Tilted tape: 2400 × 130 band centered at (897, 696) of the 1376 × 720 frame. */
+  .uc--tilted .uc__tape {
+    left: calc(897 * var(--u) - 1200 * var(--u));
+    right: auto;
+    bottom: auto;
+    top: calc(696 * var(--u) - 65 * var(--u));
+    width: calc(2400 * var(--u));
+    height: calc(130 * var(--u));
+    transform: rotate(7.75deg);
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--section-product) 0 calc(96 * var(--u)),
+      transparent calc(96 * var(--u)) calc(160 * var(--u))
     );
   }
 </style>

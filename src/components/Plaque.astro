@@ -84,7 +84,10 @@ if (current) attrs['aria-current'] = 'page';
   .plaque--xl {
     font: 700 var(--size-display)/0.9 var(--font-sans);
     letter-spacing: -0.03em;
-    padding: 8px var(--space-24) 12px;
+    padding: 6px 20px 8px;
+  }
+  @media (max-width: 767px) {
+    .plaque--xl { padding: var(--space-4) var(--space-12) 5px; }
   }
   .plaque--l {
     font: 700 var(--size-h1)/1 var(--font-sans);

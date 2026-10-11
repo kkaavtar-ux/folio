@@ -1,0 +1,23 @@
+---
+/** ListPage — shared body of the Product / Comms / AI / 3D list pages. */
+import Base from '../layouts/Base.astro';
+import ListIntro from './ListIntro.astro';
+import ProjectRow from './ProjectRow.astro';
+import { lists } from '../content/lists';
+import type { SectionKey } from '../content/site';
+
+interface Props {
+  section: SectionKey;
+}
+
+const page = lists[Astro.props.section];
+---
+
+<Base title={`${page.intro.title} — Vanya`} description={page.intro.lead} section={page.section}>
+  <ListIntro intro={page.intro} />
+  <section class="section" aria-label="Projects">
+    <div class="container">
+      {page.projects.map((project) => <ProjectRow project={project} color={page.color} />)}
+    </div>
+  </section>
+</Base>

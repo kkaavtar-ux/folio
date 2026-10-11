@@ -1,0 +1,60 @@
+---
+// Shots gallery (Figma 331:1325 / mobile 331:1895): black intro, 2-column masonry.
+import Base from '../layouts/Base.astro';
+import ListIntro from '../components/ListIntro.astro';
+import Img from '../components/Img.astro';
+import { shotsIntro, shotColumns } from '../content/lists';
+---
+
+<Base title="Shots — Vanya" description={shotsIntro.lead} section="shots">
+  <ListIntro intro={shotsIntro} />
+  <section class="section" aria-label="Gallery">
+    <div class="container shots">
+      {
+        shotColumns.map((column) => (
+          <ul class="shots__col" role="list">
+            {column.map((shot) => (
+              <li>
+                <figure class="shot">
+                  <div class="media shot__media">
+                    <Img
+                      src={shot.image}
+                      alt={shot.alt}
+                      width={680}
+                      extraWidths={[171, 340]}
+                      sizes="(max-width: 767px) calc((100vw - 44px) / 2), (max-width: 1440px) calc((100vw - 80px) / 2), 680px"
+                    />
+                  </div>
+                  {shot.fan && <figcaption class="t-mono-s">Fan concept · not affiliated</figcaption>}
+                </figure>
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .shots {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+    align-items: start;
+  }
+  .shots__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-grid-gap);
+  }
+  .shot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  /* Natural aspect ratio: no crop. */
+  .shot__media :global(picture),
+  .shot__media :global(img) { height: auto; }
+  .shot figcaption { color: var(--text-secondary); }
+</style>

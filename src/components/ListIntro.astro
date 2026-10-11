@@ -1,0 +1,60 @@
+---
+/**
+ * ListIntro — section-colored band at the top of list pages (Figma "Intro", e.g. 312:1174).
+ * Desktop: XL plaque + mono count inline (gap 12), lead 48 below; pad 72.
+ * Mobile: count under the plaque, lead 24 below.
+ * `ink` band (Shots): black, grey plaque, light text.
+ */
+import Plaque from './Plaque.astro';
+import type { ListIntro } from '../content/lists';
+
+interface Props {
+  intro: ListIntro;
+}
+
+const { intro } = Astro.props;
+---
+
+<section class:list={['intro', `intro--${intro.band}`]} aria-labelledby="page-title">
+  <div class="container intro__inner">
+    <div class="intro__title">
+      <Plaque size="xl" color={intro.plaque} as="h1" id="page-title">{intro.title}</Plaque>
+      <p class="t-mono intro__count">{intro.count}</p>
+    </div>
+    <p class="t-lead intro__lead">{intro.lead}</p>
+  </div>
+</section>
+
+<style>
+  .intro { padding-block: var(--layout-section-y); }
+  .intro--product { background: var(--section-product); }
+  .intro--3d { background: var(--section-3d); }
+  .intro--ai { background: var(--section-ai); }
+  .intro--comms { background: var(--section-comms); }
+  .intro--ink {
+    background: var(--surface-inverse);
+    color: var(--color-grey);
+  }
+  .intro--ink .intro__title :global(.plaque) { color: var(--text-primary); }
+
+  .intro__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .intro__title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-12);
+  }
+  .intro__lead { max-width: 1376px; }
+  .intro--ink .intro__lead { max-width: 820px; }
+
+  @media (max-width: 767px) {
+    .intro__title {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

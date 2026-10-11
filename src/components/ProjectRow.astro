@@ -1,0 +1,160 @@
+---
+/**
+ * ProjectRow — list-page row (Figma e.g. 309:1165): top hairline, pad 32/0,
+ * left 440 (index, H2, text, tags · meta, button) + gap 48 + right media (888).
+ * Mobile: stacked; image strips become a horizontal scroll-snap carousel bleeding past the gutter
+ * (auto-drift comes in the mobile/motion phases).
+ */
+import Tag from './Tag.astro';
+import Button from './Button.astro';
+import Arrow from './Arrow.astro';
+import Img from './Img.astro';
+import UnderConstruction from './UnderConstruction.astro';
+import type { PlaqueColor } from './Plaque.astro';
+import type { ListProject } from '../content/lists';
+
+interface Props {
+  project: ListProject;
+  color: PlaqueColor;
+}
+
+const { project, color } = Astro.props;
+const ratio = project.ratio ?? 1;
+const thumbSizes = '(max-width: 767px) 280px, (max-width: 1440px) calc((100vw - 64px - 488px - 32px) / 3), 286px';
+---
+
+<article class="prow" aria-labelledby={`p-${project.index}`}>
+  <div class="prow__text">
+    <div class="prow__top">
+      <p class="t-mono">{project.index}</p>
+      <h2 class="t-h2" id={`p-${project.index}`}>{project.title}</h2>
+      <p class="t-body-s prow__desc">{project.text}</p>
+      <ul class="prow__tags" role="list">
+        {project.tags.map((tag) => <li><Tag color={color}>{tag}</Tag></li>)}
+      </ul>
+    </div>
+    <div class="prow__bottom">
+      <p class="t-mono-s">{project.meta}</p>
+      {
+        project.href ? (
+          <Button href={project.href}>
+            Open case <Arrow />
+          </Button>
+        ) : (
+          <Button disabled>Coming soon</Button>
+        )
+      }
+    </div>
+  </div>
+
+  <div class:list={['prow__media', `prow__media--${project.media}`]}>
+    {project.media === 'stub' && <UnderConstruction tilted />}
+
+    {
+      project.media === 'strip' && (
+        <ul class="prow__strip" role="list" style={`--ratio:${ratio}`}>
+          {project.thumbs.map((t) => (
+            <li>
+              <a class="media prow__thumb" href={project.href} tabindex="-1" aria-hidden="true">
+                <Img src={t.image} alt="" width={286} extraWidths={[280]} sizes={thumbSizes} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      project.media === 'single' && (
+        <a class="media prow__thumb prow__single" href={project.href} tabindex="-1" aria-hidden="true">
+          <Img src={project.thumbs[0].image} alt="" width={296} extraWidths={[280]} sizes="(max-width: 767px) 280px, 296px" />
+        </a>
+      )
+    }
+
+    {
+      project.media === 'wide' && (
+        <a class="media prow__thumb prow__wide" href={project.href} tabindex="-1" aria-hidden="true">
+          <Img src={project.thumbs[0].image} alt="" width={888} extraWidths={[358]} sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1440px) calc(100vw - 552px), 888px" />
+        </a>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .prow {
+    display: grid;
+    grid-template-columns: 440px minmax(0, 1fr);
+    gap: var(--space-48);
+    padding-block: var(--space-32);
+    border-top: 1px solid var(--line-default);
+  }
+
+  .prow__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .prow__top {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .prow__desc { color: var(--text-secondary); }
+  .prow__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+  .prow__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+  }
+
+  .prow__media { min-width: 0; }
+  .prow__strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-16);
+  }
+  .prow__thumb {
+    display: block;
+    aspect-ratio: 1 / var(--ratio, 1);
+  }
+  .prow__media--single { display: flex; justify-content: flex-end; }
+  .prow__single { width: 296px; aspect-ratio: 1; }
+  .prow__wide { aspect-ratio: 888 / 296; }
+
+  @media (max-width: 1100px) and (min-width: 768px) {
+    .prow { grid-template-columns: 320px minmax(0, 1fr); gap: var(--space-32); }
+  }
+
+  @media (max-width: 767px) {
+    .prow {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-24);
+      padding-block: var(--space-24);
+    }
+    .prow__top { gap: var(--space-12); }
+    .prow__bottom { gap: var(--space-24); }
+
+    /* Strip → carousel, bleeding off the right edge so the next image peeks. */
+    .prow__strip {
+      display: flex;
+      gap: var(--space-12);
+      margin-right: calc(-1 * var(--layout-gutter));
+      padding-right: var(--layout-gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .prow__strip::-webkit-scrollbar { display: none; }
+    .prow__strip li { flex: none; width: 280px; scroll-snap-align: start; }
+    .prow__media--single { justify-content: flex-start; }
+    .prow__single { width: 280px; }
+  }
+</style>
