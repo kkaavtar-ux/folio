@@ -2,8 +2,8 @@
 /**
  * Plaque — the signature element: a colored rounded rectangle tightly wrapping a label.
  * Sizes map to Figma: xl = Display, l = H1, m = H2, s = Tag (`dense` = header variant).
- * With `href` it becomes interactive (hover: label blur-morph + 2px outline offset 3px;
- * press: scale .97; current/focus: same outline).
+ * With `href` it becomes interactive (hover: label blur-morph; press: scale .97).
+ * No outline for hover or current section — only :focus-visible gets one (a11y).
  */
 
 export type PlaqueColor = 'product' | '3d' | 'ai' | 'comms' | 'about' | 'white' | 'ink';
@@ -17,7 +17,7 @@ interface Props {
   as?: 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'p' | 'button';
   /** Header variant of the small plaque (pad 4/12/5/12). */
   dense?: boolean;
-  /** Marks the current section (outline state). */
+  /** Marks the current section (aria-current only, no visual state). */
   current?: boolean;
   /** Joined pair: square the inner corners. */
   join?: 'start' | 'end';
@@ -116,32 +116,19 @@ if (current) attrs['aria-current'] = 'page';
   .plaque--interactive {
     position: relative;
     cursor: pointer;
-    outline: 2px solid transparent;
-    outline-offset: 3px;
-    transition:
-      outline-color 200ms var(--ease-out),
-      transform 150ms var(--ease-out);
+    transition: transform 150ms var(--ease-out);
   }
   .plaque__label { display: inline-block; }
 
-  /* BRIEF §3: hover = label blur-morph + 2px black outline offset 3px; plaque color stays. */
+  /* Hover = label blur-morph only; plaque color and outline stay unchanged. */
   @media (hover: hover) {
-    .plaque--interactive:hover,
-    .plaque--interactive.is-hover {
-      outline-color: var(--line-default);
-    }
     .plaque--interactive:hover .plaque__label,
     .plaque--interactive.is-hover .plaque__label {
       animation: plaque-morph 280ms var(--ease-out);
     }
   }
   .plaque--interactive:active { transform: scale(0.97); }
-  .plaque--interactive[aria-current='page'],
-  .plaque--interactive:focus-visible {
-    outline-color: var(--line-default);
-  }
-  /* Joined pair: lift the hovered/focused half so its outline isn't covered. */
-  .plaque--interactive:hover,
+  /* Keyboard focus keeps the global outline; lift it above a joined neighbour. */
   .plaque--interactive:focus-visible { z-index: 1; }
 
   @keyframes plaque-morph {

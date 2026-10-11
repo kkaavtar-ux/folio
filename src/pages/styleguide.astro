@@ -158,12 +158,8 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
       <h2 class="t-mono-s sg__label">PLAQUES · states (hover the live ones)</h2>
       <div class="sg__stack">
         <div class="sg__item">
-          <span class="t-mono-s sg__meta">default / hover (blur-morph + outline) / current (outline) — live</span>
-          <div class="row">
-            <Plaque size="m" color="product" href="#sg-plaque">Product</Plaque>
-            <Plaque size="m" color="product" href="#sg-plaque" class="is-hover">Product</Plaque>
-            <Plaque size="m" color="product" href="#sg-plaque" current>Product</Plaque>
-          </div>
+          <span class="t-mono-s sg__meta">hover = blur-morph · press = scale .97 · no outline (keyboard focus only) — live</span>
+          <Plaque size="m" color="product" href="#sg-plaque">Product</Plaque>
         </div>
         <div class="sg__item">
           <span class="t-mono-s sg__meta">joined pair — live</span>
@@ -176,7 +172,7 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
           <span class="t-mono-s sg__meta">header tags — live</span>
           <div class="row">
             <Tag href="#sg-plaque" color="product" dense>Product</Tag>
-            <Tag href="#sg-plaque" color="3d" dense current>3D</Tag>
+            <Tag href="#sg-plaque" color="3d" dense>3D</Tag>
             <Tag href="#sg-plaque" color="comms" dense>Comms</Tag>
             <Tag href="#sg-plaque" color="ai" dense>AI</Tag>
           </div>
