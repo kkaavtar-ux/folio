@@ -1,0 +1,38 @@
+---
+/**
+ * Arrow — inline SVG for → and ← (Space Grotesk has no glyph for them; ↑ ↓ stay as text).
+ * Sized to the surrounding text; the real character stays in the DOM (visually hidden)
+ * so copy/paste and screen readers still get the verbatim copy.
+ */
+interface Props {
+  dir?: 'right' | 'left';
+}
+
+const { dir = 'right' } = Astro.props;
+const glyph = dir === 'right' ? '→' : '←';
+---
+
+<span class:list={['arrow', `arrow--${dir}`]}><svg
+    viewBox="0 0 20 16"
+    aria-hidden="true"
+    focusable="false"
+    ><path d="M1 8h17M11 1.5 18 8l-7 6.5" /></svg
+  ><span class="visually-hidden">{glyph}</span></span>
+
+<style>
+  .arrow {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: -0.08em;
+  }
+  .arrow svg {
+    width: 0.95em;
+    height: 0.76em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: square;
+    overflow: visible;
+  }
+  .arrow--left svg { transform: scaleX(-1); }
+</style>

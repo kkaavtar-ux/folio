@@ -2,8 +2,8 @@
 /**
  * Plaque — the signature element: a colored rounded rectangle tightly wrapping a label.
  * Sizes map to Figma: xl = Display, l = H1, m = H2, s = Tag (`dense` = header variant).
- * With `href` it becomes interactive (hover: black fill + label in plaque color + blur-morph;
- * press: scale .97; current/focus: 2px outline offset 3px).
+ * With `href` it becomes interactive (hover: label blur-morph + 2px outline offset 3px;
+ * press: scale .97; current/focus: same outline).
  */
 
 export type PlaqueColor = 'product' | '3d' | 'ai' | 'comms' | 'about' | 'white' | 'ink';
@@ -119,23 +119,16 @@ if (current) attrs['aria-current'] = 'page';
     outline: 2px solid transparent;
     outline-offset: 3px;
     transition:
-      background-color 200ms var(--ease-out),
-      color 200ms var(--ease-out),
       outline-color 200ms var(--ease-out),
       transform 150ms var(--ease-out);
   }
   .plaque__label { display: inline-block; }
 
+  /* BRIEF §3: hover = label blur-morph + 2px black outline offset 3px; plaque color stays. */
   @media (hover: hover) {
     .plaque--interactive:hover,
     .plaque--interactive.is-hover {
-      background: var(--surface-inverse);
-      color: var(--plaque-bg);
-    }
-    .plaque--interactive.plaque--ink:hover,
-    .plaque--interactive.plaque--ink.is-hover {
-      background: var(--color-white);
-      color: var(--text-primary);
+      outline-color: var(--line-default);
     }
     .plaque--interactive:hover .plaque__label,
     .plaque--interactive.is-hover .plaque__label {

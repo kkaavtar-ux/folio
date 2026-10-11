@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import Plaque from '../components/Plaque.astro';
 import Tag from '../components/Tag.astro';
 import Button from '../components/Button.astro';
+import Arrow from '../components/Arrow.astro';
 
 const colors = [
   { name: 'White', hex: '#FFFFFF', token: '--color-white', use: 'page background' },
@@ -89,7 +90,7 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
         ))}
       </ul>
       <p class="t-body sg__sample">
-        Arrows &amp; punctuation check: Open case → · Download CV ↓ · Back to top ↑ · ← All comms ·
+        Arrows &amp; punctuation check: Open case <Arrow /> · Download CV ↓ · Back to top ↑ · <Arrow dir="left" /> All comms ·
         Let’s talk. · 2025—26 · 1080×1080
       </p>
     </section>
@@ -107,7 +108,7 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
           ))}
         </ul>
         <p class="t-mono-s sg__note">
-          Gutter var(--layout-gutter) · section-y var(--layout-section-y) · title→content
+          Gutter var(--layout-gutter) · section-y var(--layout-section-y) · title<Arrow />content
           var(--layout-title-gap) · grid gap var(--layout-grid-gap) · wall gap var(--layout-wall-gap)
         </p>
       </div>
@@ -157,7 +158,7 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
       <h2 class="t-mono-s sg__label">PLAQUES · states (hover the live ones)</h2>
       <div class="sg__stack">
         <div class="sg__item">
-          <span class="t-mono-s sg__meta">default / hover (black fill, label in section color + blur-morph) / current (outline) — live</span>
+          <span class="t-mono-s sg__meta">default / hover (blur-morph + outline) / current (outline) — live</span>
           <div class="row">
             <Plaque size="m" color="product" href="#sg-plaque">Product</Plaque>
             <Plaque size="m" color="product" href="#sg-plaque" class="is-hover">Product</Plaque>
@@ -191,8 +192,8 @@ const sectionColors = ['product', '3d', 'comms', 'ai', 'about', 'white'] as cons
     <section class="sg__block" aria-labelledby="sg-button">
       <h2 id="sg-button" class="t-mono-s sg__label">BUTTONS · default / hover / disabled</h2>
       <div class="row">
-        <Button href="#sg-button">Open case →</Button>
-        <Button href="#sg-button" class="is-hover">Open case →</Button>
+        <Button href="#sg-button">Open case <Arrow /></Button>
+        <Button href="#sg-button" class="is-hover">Open case <Arrow /></Button>
         <Button href="/cv.pdf" download>Download CV ↓</Button>
         <Button href="#sg-button">Open</Button>
         <Button disabled>Coming soon</Button>
