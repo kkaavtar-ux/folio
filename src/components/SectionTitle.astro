@@ -1,0 +1,37 @@
+---
+/**
+ * SectionTitle — H1 plaque (as <h2>) + optional mono counter.
+ * Desktop: inline, gap 16, counter centered. Mobile: counter under the plaque, gap 12.
+ */
+import Plaque, { type PlaqueColor } from './Plaque.astro';
+
+interface Props {
+  color: PlaqueColor;
+  count?: string;
+  id?: string;
+  class?: string;
+}
+
+const { color, count, id, class: className } = Astro.props;
+---
+
+<div class:list={['section-title', className]}>
+  <Plaque size="l" color={color} as="h2" id={id}><slot /></Plaque>
+  {count && <p class="t-mono section-title__count">{count}</p>}
+</div>
+
+<style>
+  .section-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+  }
+  @media (max-width: 767px) {
+    .section-title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-12);
+    }
+  }
+</style>

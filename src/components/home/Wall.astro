@@ -1,0 +1,244 @@
+---
+/**
+ * Home → 3D & AI wall (Figma 292:2; behaviour note 342:1342; mobile 327:316).
+ * Desktop: 3 rows × 360px, each row loops (items duplicated, duplicates aria-hidden/inert).
+ *   JS (scripts/wall.ts): auto-scroll per row, wheel → horizontal, hover pause, drag + inertia, filter.
+ *   No JS: rows are plain horizontally scrollable strips, filter hidden.
+ * Mobile: strip of 200px squares (as in the mobile frame), no auto-scroll.
+ */
+import Plaque from '../Plaque.astro';
+import Button from '../Button.astro';
+import Img from '../Img.astro';
+import { wallRows, type WallTile } from '../../content/projects';
+
+// Speed px/s and direction per row (each row its own).
+const motion = [
+  { speed: 16, dir: 1 },
+  { speed: 22, dir: -1 },
+  { speed: 12, dir: 1 },
+];
+
+type ImageTile = Extract<WallTile, { kind: 'image' }>;
+const imageTiles = wallRows.flatMap((r) => r.tiles).filter((t): t is ImageTile => t.kind === 'image');
+
+// Loop duplicates are hidden from AT and focus.
+const DUPE: Record<string, string | boolean> = { 'aria-hidden': 'true', tabindex: '-1', inert: true };
+const NONE: Record<string, string | boolean> = {};
+---
+
+<section id="work" class="wall-section" aria-labelledby="work-title">
+  <div class="container wall-section__head">
+    <h2 id="work-title" class="wall-section__title">
+      <Plaque size="l" color="3d">3D</Plaque>
+      <Plaque size="l" color="about" aria-hidden="true">+</Plaque>
+      <span class="visually-hidden">and</span>
+      <Plaque size="l" color="ai">AI</Plaque>
+    </h2>
+    <p class="t-mono">renders · loops · AI production</p>
+  </div>
+
+  <!-- Desktop wall -->
+  <div class="wall" data-wall data-filter="all">
+    {
+      wallRows.map((row, r) => (
+        <div
+          class="wall__row"
+          data-row
+          data-speed={motion[r].speed}
+          data-dir={motion[r].dir}
+          data-offset={row.offset}
+        >
+          <div class="wall__track" data-track>
+            {[0, 1].map((copy) =>
+              row.tiles.map((tile) => {
+                const dupe = copy === 1;
+                const dupeAttrs = dupe ? DUPE : NONE;
+                if (tile.kind === 'intro')
+                  return (
+                    <div class:list={['wall__tile wall__tile--intro', dupe && 'wall__dupe']} style={`--w:${tile.width}`} {...dupeAttrs}>
+                      <p class="t-mono-s">3D / AI</p>
+                      <p class="t-h3">Renders, icon sets, AI pipelines and characters.</p>
+                    </div>
+                  );
+                if (tile.kind === 'next')
+                  return (
+                    <div class:list={['wall__tile wall__tile--next', dupe && 'wall__dupe']} style={`--w:${tile.width}`} {...dupeAttrs}>
+                      <p class="t-mono-s">NEXT</p>
+                      <p class="t-h3">Comms work</p>
+                      <Button href="/comms" tabindex={dupe ? '-1' : undefined}>Open</Button>
+                    </div>
+                  );
+                return (
+                  <a
+                    class:list={['wall__tile wall__tile--image', dupe && 'wall__dupe']}
+                    href={tile.href}
+                    style={`--w:${tile.width}`}
+                    data-cat={tile.category}
+                    aria-label={dupe ? undefined : `${tile.label} — ${tile.alt}`}
+                    draggable="false"
+                    {...dupeAttrs}
+                  >
+                    <div class:list={['media wall__media', tile.fit === 'contain' && 'wall__media--contain']}>
+                      <Img src={tile.image} alt={dupe ? '' : tile.alt} width={tile.width} sizes={`${tile.width}px`} />
+                    </div>
+                  </a>
+                );
+              }),
+            )}
+          </div>
+        </div>
+      ))
+    }
+
+    <div class="wall__filter" role="group" aria-label="Filter works">
+      <Plaque as="button" size="s" color="white" data-filter-btn="all" aria-pressed="true">All</Plaque>
+      <Plaque as="button" size="s" color="3d" data-filter-btn="3d" aria-pressed="false">3D</Plaque>
+      <Plaque as="button" size="s" color="ai" data-filter-btn="ai" aria-pressed="false">AI</Plaque>
+    </div>
+  </div>
+
+  <!-- Mobile wall -->
+  <div class="wall-m">
+    <p class="t-h3 container">Renders, icon sets, AI pipelines and characters.</p>
+    <ul class="wall-m__strip" role="list">
+      {
+        imageTiles.map((tile) => (
+          <li>
+            <a href={tile.href} class:list={['media wall-m__media', tile.fit === 'contain' && 'wall__media--contain']} aria-label={tile.label}>
+              <Img src={tile.image} alt={tile.alt} width={200} sizes="200px" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/wall';
+</script>
+
+<style>
+  .wall-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+    padding-block: var(--layout-section-y);
+  }
+  .wall-section__head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+  }
+  .wall-section__title {
+    display: flex;
+    gap: var(--space-16);
+  }
+
+  /* ── Desktop wall ───────────────────────────── */
+  .wall {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-wall-gap);
+    user-select: none;
+  }
+  .wall__row {
+    overflow-x: auto;
+    scrollbar-width: none;
+    touch-action: pan-y;
+  }
+  .wall__row::-webkit-scrollbar { display: none; }
+  :global(.js) .wall__row { overflow: hidden; cursor: grab; }
+  :global(.js) .wall__row.is-dragging { cursor: grabbing; }
+  .wall__track {
+    display: flex;
+    gap: var(--layout-wall-gap);
+    width: max-content;
+    will-change: transform;
+  }
+  .wall__dupe { display: none; }
+  :global(.js) .wall__dupe { display: flex; }
+
+  .wall__tile {
+    flex: none;
+    width: calc(var(--w) * 1px);
+    height: 360px;
+    border-radius: var(--radius-base);
+  }
+  .wall__tile--image { display: block; }
+  .wall__media { width: 100%; height: 100%; }
+  .wall__media--contain :global(img) { object-fit: contain; }
+
+  .wall__tile--intro,
+  .wall__tile--next {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: calc(var(--space-24) + var(--space-4));
+  }
+  .wall__tile--intro { background: var(--section-3d); }
+  .wall__tile--intro .t-h3 { max-width: 384px; }
+  .wall__tile--next { background: var(--section-ai); }
+
+  /* Filter: dim non-matching tiles, layout never changes. */
+  .wall__tile--image { transition: opacity 300ms var(--ease-out), filter 300ms var(--ease-out); }
+  .wall[data-filter='3d'] [data-cat]:not([data-cat='3d']),
+  .wall[data-filter='ai'] [data-cat]:not([data-cat='ai']) {
+    opacity: 0.2;
+    filter: grayscale(1);
+  }
+
+  .wall__filter {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    bottom: 26px;
+    display: none;
+    gap: 6px;
+    padding: var(--space-8);
+    background: var(--surface-inverse);
+    border-radius: var(--radius-base);
+    transform: translateX(-50%);
+  }
+  :global(.js) .wall__filter { display: flex; }
+
+  /* ── Mobile wall ────────────────────────────── */
+  .wall-m { display: none; }
+
+  @media (max-width: 767px) {
+    .wall-section__head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-12);
+    }
+    .wall-section__title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-12);
+    }
+    .wall { display: none; }
+    .wall-m {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-24);
+    }
+    .wall-m__strip {
+      display: flex;
+      gap: var(--space-12);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--layout-gutter);
+      padding-inline: var(--layout-gutter);
+      scrollbar-width: none;
+    }
+    .wall-m__strip::-webkit-scrollbar { display: none; }
+    .wall-m__strip li { flex: none; scroll-snap-align: start; }
+    .wall-m__media {
+      display: block;
+      width: 200px;
+      height: 200px;
+    }
+  }
+</style>

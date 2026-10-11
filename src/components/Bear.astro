@@ -1,0 +1,89 @@
+---
+/**
+ * Bear — home hero 3D object. Levitates (CSS), tilts toward the cursor (scripts/bear.ts),
+ * soft elliptical shadow scales/fades in sync. Reduced motion: static.
+ */
+import Img from './Img.astro';
+import bear from '../assets/images/home/bear.webp';
+---
+
+<div class="bear" data-bear>
+  <div class="bear__shadow" aria-hidden="true"><span></span></div>
+  <div class="bear__float">
+    <div class="bear__tilt" data-bear-tilt>
+      <Img
+        src={bear}
+        alt="Pink knitted 3D bear head wrapped in white rope"
+        width={904}
+        extraWidths={[358, 540]}
+        sizes="(max-width: 767px) calc(100vw - 32px), 904px"
+        eager
+      />
+    </div>
+  </div>
+</div>
+
+<script>
+  import '../scripts/bear';
+</script>
+
+<style>
+  .bear {
+    --tilt-x: 0;
+    --tilt-y: 0;
+    --shift-x: 0px;
+    --shift-y: 0px;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    perspective: 1000px;
+    pointer-events: none;
+  }
+  .bear__float {
+    position: absolute;
+    inset: 0;
+    animation: bear-float 5s ease-in-out infinite;
+  }
+  .bear__tilt {
+    width: 100%;
+    height: 100%;
+    transform: translate3d(var(--shift-x), var(--shift-y), 0) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    will-change: transform;
+  }
+  .bear__tilt :global(img) { width: 100%; height: 100%; object-fit: contain; }
+
+  /* Shadow: ellipse under the bear, moves opposite to the cursor shift. */
+  .bear__shadow {
+    position: absolute;
+    left: 28%;
+    right: 28%;
+    bottom: 6%;
+    height: 7%;
+    transform: translate3d(calc(var(--shift-x) * -1), 0, 0);
+  }
+  .bear__shadow span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--color-black);
+    filter: blur(18px);
+    opacity: 0.2;
+    animation: bear-shadow 5s ease-in-out infinite;
+  }
+
+  /* Bear higher (−10px) ⇔ shadow smaller and fainter. */
+  @keyframes bear-float {
+    0%, 100% { transform: translateY(10px) rotate(-1.5deg); }
+    50% { transform: translateY(-10px) rotate(1.5deg); }
+  }
+  @keyframes bear-shadow {
+    0%, 100% { transform: scale(1); opacity: 0.25; }
+    50% { transform: scale(0.9); opacity: 0.15; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bear__float,
+    .bear__shadow span { animation: none; }
+  }
+</style>

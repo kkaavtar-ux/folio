@@ -1,0 +1,83 @@
+---
+/** Home → Product case (Figma 291:144 / mobile 327:45). */
+import SectionTitle from '../SectionTitle.astro';
+import UnderConstruction from '../UnderConstruction.astro';
+import Tag from '../Tag.astro';
+import Button from '../Button.astro';
+---
+
+<section id="product" class="section product" aria-labelledby="product-title">
+  <div class="container product__inner">
+    <SectionTitle color="product" count="01" id="product-title">Product</SectionTitle>
+
+    <div class="product__case">
+      <UnderConstruction />
+
+      <div class="product__row">
+        <div class="product__text">
+          <h3 class="t-h2">Team Mode · Salmon</h3>
+          <p class="t-body product__desc">
+            A team mode for a store referral program. The case is being written — coming soon.
+          </p>
+        </div>
+        <div class="product__aside">
+          <div class="product__meta">
+            <p class="t-mono">Product Designer · 2026</p>
+            <Tag color="product">Product</Tag>
+          </div>
+          <Button disabled>Coming soon</Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .product__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .product__case {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .product__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-32);
+  }
+  .product__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    max-width: 760px;
+  }
+  .product__desc { color: var(--text-secondary); }
+  .product__aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-16);
+  }
+  .product__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  @media (max-width: 767px) {
+    .product__row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+    }
+    .product__aside { align-items: flex-start; gap: var(--space-12); }
+    .product__meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

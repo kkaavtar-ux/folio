@@ -1,0 +1,183 @@
+---
+/** Home → About (grey band, Figma 292:76 / mobile 327:353). Copy verbatim from PAGES.md. */
+import SectionTitle from '../SectionTitle.astro';
+import Button from '../Button.astro';
+import Arrow from '../Arrow.astro';
+import { person } from '../../content/site';
+
+const skills = [
+  { label: 'Tools', value: 'Figma, Adobe Suite, Cinema 4D (Redshift)' },
+  { label: 'AI', value: 'Midjourney, Nano Banana, Seedance, Krea, Higgsfield, Claude' },
+  { label: 'Languages', value: 'Russian — native, English — B2' },
+  { label: 'Interests', value: 'Cinematography, fine art, 3D art' },
+];
+
+const blocks = [
+  {
+    label: 'EXPERIENCE',
+    rows: [
+      {
+        date: 'Dec 2024 — Sep 2025',
+        title: 'Caltat · Moscow',
+        text: 'Graphic → Web Designer. AdTech platform with Big Data and AI: promo materials, landing pages from wireframes to UI, prototypes, banners, icon packs.',
+      },
+    ],
+  },
+  {
+    label: 'EDUCATION',
+    rows: [
+      {
+        date: 'Sep 2019 — May 2023',
+        title: 'Moscow Financial University',
+        text: 'Bachelor’s in PR & Advertising: consumer psychology, user research, graphic design coursework.',
+      },
+    ],
+  },
+  {
+    label: 'EXTRA EDUCATION',
+    rows: [
+      {
+        date: 'Autumn 2025',
+        title: 'T-shaped Designer · Wannabe',
+        text: 'Figma systems, landing from wireframe to dev-ready, 3D key visual and icon set in Redshift.',
+      },
+      {
+        date: 'Summer 2026',
+        title: 'AI Upgrade · Wannabe',
+        text: 'End-to-end AI production pipeline: mascot key visual, banners, promo landing.',
+      },
+      {
+        date: 'Summer 2026',
+        title: 'Superpowered UX/UI · Wannabe',
+        text: 'JTBD, CJM, metrics; research → design system → prototype → UX testing.',
+      },
+    ],
+  },
+];
+
+// "→" inside body copy is drawn with the Arrow SVG (no glyph in Space Grotesk).
+const splitArrows = (s: string) => s.split('→');
+---
+
+<section id="about" class="section about" aria-labelledby="about-title">
+  <div class="container about__inner">
+    <SectionTitle color="white" id="about-title">About</SectionTitle>
+
+    <div class="about__grid">
+      <div class="about__left">
+        <p class="t-lead">
+          UX/UI designer with 1+ year designing landing pages, banners and visual communication for
+          an AdTech platform, backed by 2+ years in graphic design. User research from a PR &
+          Advertising degree, plus 3D in Cinema 4D.
+        </p>
+        <Button href={person.cv} download>Download CV ↓</Button>
+
+        <div class="about__skills">
+          <h3 class="t-mono-s">SKILLS</h3>
+          <dl>
+            {
+              skills.map((s) => (
+                <div>
+                  <dt class="t-tag">{s.label}</dt>
+                  <dd class="t-body-s">{s.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+
+      <div class="about__right">
+        {
+          blocks.map((block) => (
+            <div class="about__block">
+              <h3 class="t-mono-s">{block.label}</h3>
+              <ul role="list">
+                {block.rows.map((row) => (
+                  <li class="about__row">
+                    <p class="t-mono">{row.date}</p>
+                    <div class="about__entry">
+                      <h4 class="t-plaque-s">{row.title}</h4>
+                      <p class="t-body-s">
+                        {splitArrows(row.text).map((part, i) => (
+                          <>
+                            {i > 0 && <Arrow />}
+                            {part}
+                          </>
+                        ))}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about { background: var(--section-about); }
+  .about__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .about__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 560px) minmax(0, 720px);
+    justify-content: space-between;
+    gap: var(--space-96);
+  }
+
+  .about__left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+  }
+  .about__skills {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .about__skills dl {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .about__skills dd { margin-top: 2px; }
+
+  .about__right {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .about__block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .about__row {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: var(--space-24);
+    padding-block: 20px;
+    border-top: 1px solid var(--line-default);
+  }
+  .about__entry {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  @media (max-width: 767px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-96);
+    }
+    .about__row { grid-template-columns: 1fr; }
+  }
+</style>

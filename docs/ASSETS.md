@@ -206,3 +206,9 @@ Rules
 | `shots/persona-5.webp` | 1440×900 |  | 66 |  |
 | `shots/spatial-lab.webp` | 2400×1543 |  | 176 | Shots right #5 · also Home wall tile "AI · VR hero block" |
 | `shots/walmart-cash.webp` | 2400×1500 |  | 99 |  |
+
+## home — pulled from Figma (no matching file in the masters)
+| file | px | alpha | used in |
+|---|---|---|---|
+| `home/wall-vr-headset.webp` | 1920×1072 | yes | Home wall "AI · VR hero block" (Figma 292:18) |
+| `home/wall-noxis-campaign.webp` | 1376×768 | yes | Home wall "AI · NOXIS campaign" (Figma 292:20) |

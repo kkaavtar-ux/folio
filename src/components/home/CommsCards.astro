@@ -1,0 +1,79 @@
+---
+/** Home → Comms (yellow band, Figma 292:37 / mobile 327:280). */
+import SectionTitle from '../SectionTitle.astro';
+import Tag from '../Tag.astro';
+import Img from '../Img.astro';
+import { homeComms } from '../../content/projects';
+---
+
+<section id="comms" class="section comms" aria-labelledby="comms-title">
+  <div class="container comms__inner">
+    <SectionTitle color="white" count="03" id="comms-title">Comms</SectionTitle>
+
+    <ul class="comms__cards" role="list">
+      {
+        homeComms.map((card) => (
+          <li>
+            <a class="card" href={card.href}>
+              <div class="media card__media">
+                <Img
+                  src={card.image}
+                  alt={card.alt}
+                  width={448}
+                  extraWidths={[358]}
+                  sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1440px) calc((100vw - 96px) / 3), 448px"
+                />
+              </div>
+              <div class="card__text">
+                <h3 class="t-h3">{card.title}</h3>
+                <p class="t-body-s">{card.text}</p>
+              </div>
+              <div class="card__meta">
+                <p class="t-mono-s">{card.meta}</p>
+                <Tag color="white">Comms</Tag>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .comms { background: var(--section-comms); }
+  .comms__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-title-gap);
+  }
+  .comms__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--layout-grid-gap);
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    height: 100%;
+  }
+  .card__media { aspect-ratio: 1; }
+  .card__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    flex: 1;
+  }
+  .card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  @media (max-width: 767px) {
+    .comms__cards { grid-template-columns: 1fr; }
+    .card { gap: var(--space-12); }
+    .card__text { gap: 6px; }
+  }
+</style>
