@@ -49,6 +49,6 @@ export default defineConfig({
   site: 'https://vanya-folio.vercel.app',
   output: 'static',
   trailingSlash: 'ignore',
-  build: { inlineStylesheets: 'auto' },
+  build: { inlineStylesheets: 'always' },
   integrations: [pruneUnusedImages()],
 });

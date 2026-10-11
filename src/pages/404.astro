@@ -1,0 +1,27 @@
+---
+// 404 — same style as the site (BRIEF §5): Display "404" + button back home.
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+---
+
+<Base title="404 — Vanya" description="Page not found." noindex>
+  <section class="nf">
+    <div class="container nf__inner">
+      <h1 class="t-display" data-reveal="blur">404</h1>
+      <Button href="/">Back home</Button>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    background: var(--section-product);
+    padding-block: var(--space-128);
+  }
+  .nf__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-24);
+  }
+</style>

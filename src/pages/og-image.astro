@@ -1,0 +1,49 @@
+---
+// Source for public/og.png (1200×630). Rendered once with headless Chrome:
+//   Chrome --headless --screenshot=public/og.png --window-size=1200,630 http://localhost:4321/og-image
+// Not linked anywhere; noindex.
+import '../styles/global.css';
+import Img from '../components/Img.astro';
+import bear from '../assets/images/home/bear.webp';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>OG image — Vanya</title>
+  </head>
+  <body class="og">
+    <div class="og__text">
+      <p class="t-plaque-s og__name">Vanya</p>
+      <p class="t-h3">Product Designer</p>
+    </div>
+    <div class="og__bear">
+      <Img src={bear} alt="" width={620} sizes="620px" eager />
+    </div>
+  </body>
+</html>
+
+<style>
+  .og {
+    width: 1200px;
+    height: 630px;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    background: var(--section-3d);
+  }
+  .og__text {
+    position: absolute;
+    left: 64px;
+    bottom: 64px;
+  }
+  .og__name { font-size: 96px; line-height: 1; letter-spacing: -0.03em; }
+  .og__bear {
+    position: absolute;
+    right: 40px;
+    top: 5px;
+    width: 620px;
+  }
+</style>
