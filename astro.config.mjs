@@ -46,7 +46,7 @@ function pruneUnusedImages() {
 }
 
 export default defineConfig({
-  site: 'https://vanya-folio.vercel.app',
+  site: 'https://kkaavtarfolio.vercel.app',
   output: 'static',
   trailingSlash: 'ignore',
   build: { inlineStylesheets: 'always' },
