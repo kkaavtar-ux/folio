@@ -114,9 +114,9 @@ h1, h2, h3, h4, p { overflow-wrap: break-word; }
 
 main:focus { outline: none; }
 
-/* ── Image card hover (BRIEF §4.8) ─────────────────
-   .media = clipped image box; inside a link, hover shows a 1px black frame inset 8px
-   and scales the image 1.02. */
+/* ── Image card hover (BRIEF §4.8, Vanya 2026-10-12) ─
+   .media = clipped image box; inside a link, hover shows a 2px frame inset 8px in the
+   context's section color (--hover-accent, black by default) and scales the image 1.02. */
 .media {
   position: relative;
   overflow: hidden;
@@ -138,7 +138,7 @@ main:focus { outline: none; }
   content: '';
   position: absolute;
   inset: var(--space-8);
-  border: 1px solid var(--line-default);
+  border: 2px solid var(--hover-accent, var(--line-default));
   border-radius: calc(var(--radius-base) / 2);
   opacity: 0;
   pointer-events: none;
@@ -201,3 +201,12 @@ a:focus-visible .media::after { opacity: 1; }
     transition: none !important;
   }
 }
+
+/* Hover frame colors per context */
+.accent-product { --hover-accent: var(--section-product); }
+.accent-3d { --hover-accent: var(--section-3d); }
+.accent-ai { --hover-accent: var(--section-ai); }
+.accent-comms { --hover-accent: var(--section-comms); }
+[data-cat='3d'] { --hover-accent: var(--section-3d); }
+[data-cat='ai'] { --hover-accent: var(--section-ai); }
+[data-cat='shots'] { --hover-accent: var(--line-default); }

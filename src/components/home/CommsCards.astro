@@ -14,7 +14,7 @@ import { homeComms } from '../../content/projects';
       {
         homeComms.map((card) => (
           <li>
-            <a class="card" href={card.href} data-reveal="fade">
+            <a class="card accent-comms" href={card.href} data-reveal="fade">
               <div class="media card__media">
                 <Img
                   src={card.image}
@@ -30,7 +30,7 @@ import { homeComms } from '../../content/projects';
               </div>
               <div class="card__meta">
                 <p class="t-mono-s">{card.meta}</p>
-                <Tag color="white">Comms</Tag>
+                <Tag color="white" accent="comms">Comms</Tag>
               </div>
             </a>
           </li>

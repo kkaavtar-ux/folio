@@ -95,7 +95,7 @@ const NONE: Record<string, string | boolean> = {};
       {
         imageTiles.map((tile) => (
           <li style={`--r:${tile.ratio}`}>
-            <a href={tile.href} class="media wall-m__media">
+            <a href={tile.href} class="media wall-m__media" data-cat={tile.category}>
               <Img src={tile.image} alt={tile.alt} width={Math.round(200 * tile.ratio)} sizes={`${Math.round(200 * tile.ratio)}px`} />
             </a>
           </li>

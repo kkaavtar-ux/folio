@@ -23,7 +23,7 @@ const ratio = project.ratio ?? 1;
 const thumbSizes = '(max-width: 767px) 280px, (max-width: 1440px) calc((100vw - 64px - 488px - 32px) / 3), 286px';
 ---
 
-<article class="prow" data-reveal="fade" aria-labelledby={`p-${project.index}`}>
+<article class:list={['prow', `accent-${color}`]} data-reveal="fade" aria-labelledby={`p-${project.index}`}>
   <div class="prow__text">
     <div class="prow__top">
       <p class="t-mono">{project.index}</p>

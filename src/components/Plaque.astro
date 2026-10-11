@@ -136,8 +136,11 @@ if (current) attrs['aria-current'] = 'page';
   }
   .plaque__label { display: inline-block; }
 
-  /* Hover: grey plaque, label in the section color. */
+  /* Hover: grey plaque, label in the section color. Chips (size s) react too, even when
+     they are plain labels inside a card link (Vanya). */
+  .plaque--s { transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out); }
   @media (hover: hover) {
+    .plaque--s:hover,
     .plaque--interactive:hover,
     .plaque--interactive.is-hover {
       background: var(--surface-neutral);
