@@ -1,28 +1,23 @@
 ---
 /**
  * Home → 3D & AI wall (Figma 292:2; behaviour note 342:1342; mobile 327:316).
- * Desktop: 3 rows × 360px, each row loops (items duplicated, duplicates aria-hidden/inert).
- *   JS (scripts/wall.ts): auto-scroll per row, wheel → horizontal, hover pause, drag + inertia, filter.
- *   No JS: rows are plain horizontally scrollable strips, filter hidden.
- * Mobile: strip of 200px squares (as in the mobile frame), no auto-scroll.
+ * Per Vanya (2026-10-12): uniform 360×360 squares in 3 rows that move together as one grid,
+ * so columns always line up. Content: every final 3D / AI image + all shots.
+ * Desktop: the grid is duplicated once for a seamless loop (copy is aria-hidden / inert).
+ *   JS (scripts/wall.ts): auto-scroll, wheel → horizontal, hover pause, drag + inertia, filter.
+ *   No JS: the grid is a plain horizontally scrollable strip, filter hidden.
+ * Mobile: horizontal strip of 200px squares (mobile frame), no auto-scroll.
  */
 import Plaque from '../Plaque.astro';
 import Button from '../Button.astro';
 import Img from '../Img.astro';
-import { wallRows, type WallTile } from '../../content/projects';
-
-// Speed px/s and direction per row (each row its own).
-const motion = [
-  { speed: 16, dir: 1 },
-  { speed: 22, dir: -1 },
-  { speed: 12, dir: 1 },
-];
+import { wallTiles, type WallTile } from '../../content/projects';
 
 type ImageTile = Extract<WallTile, { kind: 'image' }>;
-const imageTiles = wallRows.flatMap((r) => r.tiles).filter((t): t is ImageTile => t.kind === 'image');
+const imageTiles = wallTiles.filter((t): t is ImageTile => t.kind === 'image');
 
-// Loop duplicates are hidden from AT and focus.
-const DUPE: Record<string, string | boolean> = { 'aria-hidden': 'true', tabindex: '-1', inert: true };
+// Loop copy is hidden from AT and focus.
+const DUPE: Record<string, string | boolean> = { 'aria-hidden': 'true', inert: true };
 const NONE: Record<string, string | boolean> = {};
 ---
 
@@ -39,61 +34,46 @@ const NONE: Record<string, string | boolean> = {};
 
   <!-- Desktop wall -->
   <div class="wall" data-wall data-filter="all">
-    {
-      wallRows.map((row, r) => (
-        <div
-          class="wall__row"
-          data-row
-          data-speed={motion[r].speed}
-          data-dir={motion[r].dir}
-          data-offset={row.offset}
-        >
-          <div class="wall__track" data-track>
-            {[0, 1].map((copy) =>
-              row.tiles.map((tile) => {
-                const dupe = copy === 1;
-                const dupeAttrs = dupe ? DUPE : NONE;
+    <div class="wall__viewport" data-row data-speed="18" data-dir="1">
+      <div class="wall__track" data-track>
+        {
+          [0, 1].map((copy) => (
+            <div class:list={['wall__grid', copy === 1 && 'wall__dupe']} {...(copy === 1 ? DUPE : NONE)}>
+              {wallTiles.map((tile) => {
                 if (tile.kind === 'intro')
                   return (
-                    <div class:list={['wall__tile wall__tile--intro', dupe && 'wall__dupe']} style={`--w:${tile.width}`} {...dupeAttrs}>
+                    <div class="wall__tile wall__tile--intro">
                       <p class="t-mono-s">3D / AI</p>
                       <p class="t-h3">Renders, icon sets, AI pipelines and characters.</p>
                     </div>
                   );
                 if (tile.kind === 'next')
                   return (
-                    <div class:list={['wall__tile wall__tile--next', dupe && 'wall__dupe']} style={`--w:${tile.width}`} {...dupeAttrs}>
+                    <div class="wall__tile wall__tile--next">
                       <p class="t-mono-s">NEXT</p>
                       <p class="t-h3">Comms work</p>
-                      <Button href="/comms" tabindex={dupe ? '-1' : undefined}>Open</Button>
+                      <Button href="/comms">Open</Button>
                     </div>
                   );
                 return (
-                  <a
-                    class:list={['wall__tile wall__tile--image', dupe && 'wall__dupe']}
-                    href={tile.href}
-                    style={`--w:${tile.width}`}
-                    data-cat={tile.category}
-                    aria-label={dupe ? undefined : `${tile.label} — ${tile.alt}`}
-                    draggable="false"
-                    {...dupeAttrs}
-                  >
-                    <div class:list={['media wall__media', tile.fit === 'contain' && 'wall__media--contain']}>
-                      <Img src={tile.image} alt={dupe ? '' : tile.alt} width={tile.width} sizes={`${tile.width}px`} />
+                  <a class="wall__tile wall__tile--image" href={tile.href} data-cat={tile.category} draggable="false">
+                    <div class="media wall__media">
+                      <Img src={tile.image} alt={copy === 1 ? '' : tile.alt} width={360} sizes="360px" />
                     </div>
                   </a>
                 );
-              }),
-            )}
-          </div>
-        </div>
-      ))
-    }
+              })}
+            </div>
+          ))
+        }
+      </div>
+    </div>
 
     <div class="wall__filter" role="group" aria-label="Filter works">
       <Plaque as="button" size="s" color="white" data-filter-btn="all" aria-pressed="true">All</Plaque>
       <Plaque as="button" size="s" color="3d" data-filter-btn="3d" aria-pressed="false">3D</Plaque>
       <Plaque as="button" size="s" color="ai" data-filter-btn="ai" aria-pressed="false">AI</Plaque>
+      <Plaque as="button" size="s" color="about" data-filter-btn="shots" aria-pressed="false">Shots</Plaque>
     </div>
   </div>
 
@@ -104,7 +84,7 @@ const NONE: Record<string, string | boolean> = {};
       {
         imageTiles.map((tile) => (
           <li>
-            <a href={tile.href} class:list={['media wall-m__media', tile.fit === 'contain' && 'wall__media--contain']} aria-label={tile.label}>
+            <a href={tile.href} class="media wall-m__media">
               <Img src={tile.image} alt={tile.alt} width={200} sizes="200px" />
             </a>
           </li>
@@ -138,54 +118,59 @@ const NONE: Record<string, string | boolean> = {};
 
   /* ── Desktop wall ───────────────────────────── */
   .wall {
+    --tile: 360px;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--layout-wall-gap);
     user-select: none;
   }
-  .wall__row {
+  .wall__viewport {
     overflow-x: auto;
     scrollbar-width: none;
     touch-action: pan-y;
   }
-  .wall__row::-webkit-scrollbar { display: none; }
-  :global(.js) .wall__row { overflow: hidden; cursor: grab; }
-  :global(.js) .wall__row.is-dragging { cursor: grabbing; }
+  .wall__viewport::-webkit-scrollbar { display: none; }
+  :global(.js) .wall__viewport { overflow: hidden; cursor: grab; }
+  :global(.js) .wall__viewport.is-dragging { cursor: grabbing; }
+
   .wall__track {
     display: flex;
     gap: var(--layout-wall-gap);
     width: max-content;
     will-change: transform;
   }
+  .wall__grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, var(--tile));
+    grid-auto-columns: var(--tile);
+    gap: var(--layout-wall-gap);
+  }
   .wall__dupe { display: none; }
-  :global(.js) .wall__dupe { display: flex; }
+  :global(.js) .wall__dupe { display: grid; }
 
   .wall__tile {
-    flex: none;
-    width: calc(var(--w) * 1px);
-    height: 360px;
+    width: var(--tile);
+    height: var(--tile);
     border-radius: var(--radius-base);
   }
   .wall__tile--image { display: block; }
   .wall__media { width: 100%; height: 100%; }
-  .wall__media--contain :global(img) { object-fit: contain; }
 
   .wall__tile--intro,
   .wall__tile--next {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: flex-start;
     padding: calc(var(--space-24) + var(--space-4));
   }
   .wall__tile--intro { background: var(--section-3d); }
-  .wall__tile--intro .t-h3 { max-width: 384px; }
   .wall__tile--next { background: var(--section-ai); }
 
   /* Filter: dim non-matching tiles, layout never changes. */
   .wall__tile--image { transition: opacity 300ms var(--ease-out), filter 300ms var(--ease-out); }
   .wall[data-filter='3d'] [data-cat]:not([data-cat='3d']),
-  .wall[data-filter='ai'] [data-cat]:not([data-cat='ai']) {
+  .wall[data-filter='ai'] [data-cat]:not([data-cat='ai']),
+  .wall[data-filter='shots'] [data-cat]:not([data-cat='shots']) {
     opacity: 0.2;
     filter: grayscale(1);
   }

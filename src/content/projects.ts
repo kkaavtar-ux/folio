@@ -6,17 +6,6 @@ import pragmatrix3d from '../assets/images/comms/pragmatica/pragmatrix-3d.webp';
 import alisaKv from '../assets/images/comms/alisa/kv-1080x1080.webp';
 import creditLimit from '../assets/images/shots/credit-limit.webp';
 
-import wallpaperFinal01 from '../assets/images/3d/wallpaper/final-01.webp';
-import torii from '../assets/images/3d/icon-set/torii.webp';
-import cloud from '../assets/images/3d/icon-set/cloud.webp';
-import flower from '../assets/images/3d/icon-set/flower.webp';
-import kvFinal from '../assets/images/3d/key-visual/final.webp';
-import riloHeroPose from '../assets/images/ai/rilo/hero-pose.webp';
-import riloSheet from '../assets/images/ai/rilo/character-sheet.webp';
-// Two wall fills exist only in Figma (292:18, 292:20); pulled from Figma 2026-10-12.
-import wallNoxis from '../assets/images/home/wall-noxis-campaign.webp';
-import wallVr from '../assets/images/home/wall-vr-headset.webp';
-import iconPackExcavator from '../assets/images/ai/icon-pack/set-01/icon-01.webp';
 
 export interface CommsCard {
   title: string;
@@ -55,51 +44,69 @@ export const homeComms: CommsCard[] = [
   },
 ];
 
-export type WallCategory = '3d' | 'ai';
+export type WallCategory = '3d' | 'ai' | 'shots';
 
 export type WallTile =
-  | {
-      kind: 'image';
-      /** Figma layer name, e.g. "3D · wallpaper". */
-      label: string;
-      category: WallCategory;
-      width: number;
-      href: string;
-      image: ImageMetadata;
-      alt: string;
-      /** Transparent renders sit on the grey tile, contained. */
-      fit?: 'cover' | 'contain';
-    }
-  | { kind: 'intro'; width: number }
-  | { kind: 'next'; width: number };
+  | { kind: 'image'; category: WallCategory; href: string; image: ImageMetadata; alt: string }
+  | { kind: 'intro' }
+  | { kind: 'next' };
 
-/** Home → 3D & AI wall, rows top→bottom, tiles left→right (Figma 292:9). */
-export const wallRows: { offset: number; tiles: WallTile[] }[] = [
-  {
-    offset: 0,
-    tiles: [
-      { kind: 'intro', width: 440 },
-      { kind: 'image', label: '3D · wallpaper', category: '3d', width: 640, href: '/3d/wallpaper', image: wallpaperFinal01, alt: 'Primitives wallpaper: red, mint and white ribbons flowing through the frame' },
-      { kind: 'image', label: '3D · Bunpro icon set', category: '3d', width: 360, href: '/3d/icon-set', image: torii, alt: 'Knitted pink torii gate tied with white rope', fit: 'contain' },
-      { kind: 'image', label: 'AI · brand mascot', category: 'ai', width: 360, href: '/ai/rilo', image: riloHeroPose, alt: 'Rilo, a fennec-fox robot mascot in a cream armored suit', fit: 'contain' },
-    ],
-  },
-  {
-    offset: 180,
-    tiles: [
-      { kind: 'image', label: 'AI · VR hero block', category: 'ai', width: 640, href: '/shots', image: wallVr, alt: 'Wireframe render of a cream VR headset' },
-      { kind: 'image', label: '3D · Bunpro key visual', category: '3d', width: 480, href: '/3d/key-visual', image: kvFinal, alt: 'Pink knitted kanji sign rising from a sea of blue kanji blocks' },
-      { kind: 'image', label: 'AI · NOXIS campaign', category: 'ai', width: 640, href: '/ai/noxis', image: wallNoxis, alt: 'NOXIS gear: cream armor, white parka, black puffer and a branded case' },
-      { kind: 'image', label: '3D · icon', category: '3d', width: 360, href: '/3d/icon-set', image: cloud, alt: 'Knitted pink cloud icon tied with white rope', fit: 'contain' },
-    ],
-  },
-  {
-    offset: 60,
-    tiles: [
-      { kind: 'image', label: '3D · icon', category: '3d', width: 360, href: '/3d/icon-set', image: flower, alt: 'Knitted pink sakura flower icon tied with white rope', fit: 'contain' },
-      { kind: 'image', label: 'AI · character sheet', category: 'ai', width: 540, href: '/ai/rilo', image: riloSheet, alt: 'Rilo character sheet: front, three-quarter, side and back views' },
-      { kind: 'image', label: 'AI · 3D icon pack', category: 'ai', width: 360, href: '/ai/icon-pack', image: iconPackExcavator, alt: 'Lilac 3D excavator keychain icon' },
-      { kind: 'next', width: 420 },
-    ],
-  },
+// Home → 3D & AI wall: every final 3D / AI image + all shots (Vanya, 2026-10-12).
+// Excluded: rejected directions and third-party style references.
+const wallFiles = import.meta.glob<{ default: ImageMetadata }>(
+  ['../assets/images/{3d,ai,shots}/**/*.webp', '../assets/images/home/wall-*.webp'],
+  { eager: true },
+);
+
+/** Folder → case link + readable name for alt text. */
+const wallGroups: { match: string; category: WallCategory; href: string; name: string }[] = [
+  { match: '/3d/wallpaper/', category: '3d', href: '/3d/wallpaper', name: 'Primitives wallpaper' },
+  { match: '/3d/icon-set/', category: '3d', href: '/3d/icon-set', name: 'Bunpro icon set' },
+  { match: '/3d/key-visual/', category: '3d', href: '/3d/key-visual', name: 'Bunpro key visual' },
+  { match: '/ai/icon-pack/', category: 'ai', href: '/ai/icon-pack', name: '3D Icon Pack' },
+  { match: '/ai/noxis/', category: 'ai', href: '/ai/noxis', name: 'NOXIS' },
+  { match: '/home/wall-noxis', category: 'ai', href: '/ai/noxis', name: 'NOXIS' },
+  { match: '/ai/rilo/', category: 'ai', href: '/ai/rilo', name: 'Rilo' },
+  { match: '/home/wall-vr', category: 'shots', href: '/shots', name: 'Spatial Lab' },
+  { match: '/shots/', category: 'shots', href: '/shots', name: 'Shot' },
 ];
+
+const humanize = (path: string) =>
+  path
+    .split('/')
+    .slice(-2)
+    .join(' ')
+    .replace(/\.webp$/, '')
+    .replace(/^(icon-set|key-visual|wallpaper|noxis|rilo|shots|home) /, '')
+    .replace(/[-_]/g, ' ')
+    .replace(/\bset (\d+) icon (\d+)/, 'set $1, icon $2');
+
+// Deterministic shuffle (same order every build) so categories mix on the wall.
+function shuffle<T>(items: T[], seed = 7): T[] {
+  const a = [...items];
+  let s = seed;
+  const rnd = () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const wallImages: WallTile[] = shuffle(
+  Object.entries(wallFiles)
+    .filter(([path]) => !/rejected-|reference\.webp|\/home\/bear/.test(path))
+    .map(([path, mod]) => {
+      const group = wallGroups.find((g) => path.includes(g.match))!;
+      return {
+        kind: 'image' as const,
+        category: group.category,
+        href: group.href,
+        image: mod.default,
+        alt: `${group.name} — ${humanize(path)}`,
+      };
+    }),
+);
+
+/** Tiles in column order (3 per column): intro first, "Next" last. */
+export const wallTiles: WallTile[] = [{ kind: 'intro' }, ...wallImages, { kind: 'next' }];
