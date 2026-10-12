@@ -266,7 +266,6 @@ export const shotsIntro: ListIntro = {
 export interface Shot {
   image: ImageMetadata;
   alt: string;
-  fan?: boolean; // "Fan concept · not affiliated"
 }
 
 /** Masonry columns, top→bottom. Order from PAGES.md minus the 3 removed shots,
@@ -277,13 +276,13 @@ export const shotColumns: Shot[][] = [
     { image: filtersTooTight, alt: 'Filters too tight: empty-state UI with a 3D bowl of travel icons' },
     { image: creditLimit, alt: 'Credit limit: blurred ruble amounts next to an application form' },
     { image: amplitude, alt: 'Your first 4 steps in Amplitude: onboarding banner on green' },
-    { image: persona5, alt: 'Persona 5 concept page on red', fan: true },
+    { image: persona5, alt: 'Persona 5 concept page on red' },
   ],
   [
-    { image: finalFantasy, alt: 'Final Fantasy VII concept page', fan: true },
+    { image: finalFantasy, alt: 'Final Fantasy VII concept page' },
     { image: doTheRightThing, alt: 'Do the Right Thing: film poster layout in blue and red' },
     { image: bookingNewYork, alt: 'Booking confirmed in New York: green confirmation screen' },
     { image: spatialLab, alt: 'Spatial Lab landing hero with a wireframe VR headset' },
-    { image: walmartCash, alt: 'Walmart Cash concept page', fan: true },
+    { image: walmartCash, alt: 'Walmart Cash concept page' },
   ],
 ];
