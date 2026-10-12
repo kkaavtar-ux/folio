@@ -46,7 +46,7 @@ function pruneUnusedImages() {
 }
 
 export default defineConfig({
-  site: 'https://kkaavtarfolio.vercel.app',
+  site: 'https://kkaavtar.vercel.app',
   output: 'static',
   trailingSlash: 'ignore',
   build: { inlineStylesheets: 'always' },
