@@ -1,7 +1,7 @@
 ---
 /**
  * Img — <Picture> (AVIF + WebP) with widths derived from the slot's CSS width
- * (1×, 1.5×, 2×), never above the source width (no upscaling).
+ * (1×, 2× + mobile extras), never above the source width (no upscaling).
  */
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -16,11 +16,14 @@ interface Props {
   class?: string;
   /** Extra smaller widths for mobile slots. */
   extraWidths?: number[];
+  /** Encoder quality 1–100 (default: Astro's). Raise for images with small text (UI shots). */
+  quality?: number;
 }
 
-const { src, alt, width, sizes, eager = false, class: className, extraWidths = [] } = Astro.props;
+const { src, alt, width, sizes, eager = false, class: className, extraWidths = [], quality } = Astro.props;
 
-const widths = [...new Set([...extraWidths, width, Math.round(width * 1.5), width * 2].map((w) => Math.min(w, src.width)))].sort(
+// 1× and 2× of the slot (+ mobile extras). No 1.5× step: it cost ~25% of dist for little gain.
+const widths = [...new Set([...extraWidths, width, width * 2].map((w) => Math.min(w, src.width)))].sort(
   (a, b) => a - b,
 );
 const fallback = widths[widths.length - 1] >= width ? Math.min(width, src.width) : src.width;
@@ -39,5 +42,6 @@ const fallback = widths[widths.length - 1] >= width ? Math.min(width, src.width)
   decoding={eager ? 'sync' : 'async'}
   fetchpriority={eager ? 'high' : undefined}
   draggable="false"
+  quality={quality}
   class={className}
 />

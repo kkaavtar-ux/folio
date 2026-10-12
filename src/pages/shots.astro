@@ -21,8 +21,9 @@ import { shotsIntro, shotColumns } from '../content/lists';
                       src={shot.image}
                       alt={shot.alt}
                       width={680}
-                      extraWidths={[171, 340]}
-                      sizes="(max-width: 767px) calc((100vw - 44px) / 2), (max-width: 1440px) calc((100vw - 80px) / 2), 680px"
+                      extraWidths={[358, 1074]}
+                      quality={85}
+                      sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1440px) calc((100vw - 80px) / 2), 680px"
                     />
                   </div>
                   {shot.fan && <figcaption class="t-mono-s">Fan concept · not affiliated</figcaption>}
@@ -57,4 +58,9 @@ import { shotsIntro, shotColumns } from '../content/lists';
   .shot__media :global(picture),
   .shot__media :global(img) { height: auto; }
   .shot figcaption { color: var(--text-secondary); }
+
+  /* Mobile: one shot per row, full width (Vanya 2026-10-12). */
+  @media (max-width: 767px) {
+    .shots { grid-template-columns: 1fr; }
+  }
 </style>
