@@ -4,6 +4,7 @@ import Case from '../../layouts/Case.astro';
 import BriefConcept from '../../components/case/BriefConcept.astro';
 import Gallery from '../../components/case/Gallery.astro';
 import NextProject from '../../components/case/NextProject.astro';
+import VimeoVideo from '../../components/case/VimeoVideo.astro';
 import type { ImageMetadata } from 'astro';
 
 import torii from '../../assets/images/3d/icon-set/torii.webp';
@@ -63,6 +64,8 @@ const scenes = Array.from({ length: 12 }, (_, i) => r(`scene-${pad(i + 1)}`, `Ri
       },
     ]}
   />
+
+  <VimeoVideo id="1234977278" label="04 · IN MOTION" title="Rilo in motion" />
 
   <NextProject
     label="NEXT · SECTION"

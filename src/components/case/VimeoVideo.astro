@@ -1,0 +1,62 @@
+---
+/**
+ * VimeoVideo — responsive Vimeo embed for case pages (mono label + 16:9 player, radius base).
+ * The iframe is lazy-loaded so the player's scripts only load near the viewport.
+ * No-JS friendly (plain iframe); a link to Vimeo is the fallback text.
+ */
+interface Props {
+  /** Vimeo video id, e.g. "123456789". */
+  id: string;
+  /** Privacy hash for unlisted videos (the "h" part of vimeo.com/<id>/<hash>). */
+  hash?: string;
+  label?: string;
+  title: string;
+}
+
+const { id, hash, label, title } = Astro.props;
+const params = new URLSearchParams({ dnt: '1', title: '0', byline: '0', portrait: '0' });
+if (hash) params.set('h', hash);
+const src = `https://player.vimeo.com/video/${id}?${params}`;
+---
+
+<section class="cs" aria-label={title}>
+  <div class="container vv" data-reveal="fade">
+    {label && <h2 class="t-mono">{label}</h2>}
+    <div class="vv__frame">
+      <iframe
+        src={src}
+        title={title}
+        loading="lazy"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      >
+        <a href={`https://vimeo.com/${id}${hash ? `/${hash}` : ''}`}>{title}</a>
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vv {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  .vv__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-base);
+    background: var(--surface-inverse);
+  }
+  .vv__frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  @media (max-width: 767px) {
+    .vv { gap: var(--space-12); }
+  }
+</style>
